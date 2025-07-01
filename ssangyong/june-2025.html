@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Performance Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .slide-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+        .slide {
+            scroll-snap-align: start;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .slide-content {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .metric-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .slide-indicator {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 50;
+        }
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .indicator-dot.active {
+            background-color: white;
+        }
+        .gradient-bg {
+            background: linear-gradient(-45deg, #0a192f, #1e3a5f, #3c5a99, #172a46);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .ad-creative-placeholder {
+            background-color: #0a192f;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            max-width: 450px; /* Increased size */
+            margin: auto;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 2.5cm; /* Increased margin to make content area smaller */
+            }
+
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .no-print, .slide-indicator, .animate-bounce {
+                display: none !important;
+            }
+
+            .slide-container {
+                height: auto;
+                overflow: visible;
+                scroll-snap-type: none;
+            }
+
+            .slide {
+                height: 100%; 
+                width: 100%;
+                page-break-after: always;
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+                border: 1px solid #ddd;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            
+            .slide:last-child {
+                page-break-after: avoid;
+            }
+            
+            .slide-content.grid {
+                display: grid !important;
+                grid-template-columns: 1fr 2fr;
+                align-items: center;
+                gap: 1rem !important;
+            }
+
+            .metric-card, .bg-white\/5 {
+                background-color: #f3f4f6 !important;
+                border: 1px solid #e5e7eb !important;
+                box-shadow: none !important;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                padding: 0.5rem !important;
+            }
+            
+            h1, h2, h3, p, div, span {
+                color: #000 !important;
+            }
+
+            /* Adjust text sizes for print readability */
+            h1 { font-size: 2rem !important; }
+            h2 { font-size: 1.5rem !important; }
+            h3 { font-size: 1rem !important; }
+            p { font-size: 0.8rem !important; }
+            .metric-card .text-lg { font-size: 0.8rem !important; }
+            .metric-card .text-4xl, .metric-card .text-3xl { font-size: 1.75rem !important; }
+            .text-xl { font-size: 0.9rem !important; }
+            .text-2xl { font-size: 1rem !important; }
+            
+            .ad-creative-placeholder {
+                max-width: 200px; /* Adjusted for square aspect ratio in print */
+                border: 2px solid #ccc !important;
+            }
+            
+            .gradient-bg {
+                background: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="gradient-bg text-white overflow-hidden">
+
+    <div class="no-print fixed top-4 right-4 flex flex-col gap-2 z-50">
+        <button onclick="window.print()" class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition">
+            Print Presentation
+        </button>
+        <button onclick="screenshotCurrentSlide()" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-blue-600 transition">
+            Screenshot Slide
+        </button>
+    </div>
+
+    <div id="slide-container" class="slide-container">
+        <!-- Slides will be dynamically inserted here -->
+    </div>
+
+    <div id="slide-indicator" class="slide-indicator no-print hidden md:flex"></div>
+
+    <script>
+        // ===================================================================================
+        // EDIT YOUR DATA HERE
+        // ===================================================================================
+
+        // 1. Replace this with the URL to your company's logo
+        const companyLogoUrl = "logo_ssyg.png";
+
+        // 2. Edit the campaign data below. Add or remove campaign objects as needed.
+        const presentationData = {
+            companyLogoUrl: "logo_ssyg.png",
+            campaignData: [
+                {
+                    type: "title",
+                    title: "Facebook Ads Performance Review",
+                    subtitle: "Analysis of Engagement & Messaging Campaigns"
+                },
+                {
+                    type: "summary",
+                    title: "Overall Campaign Performance",
+                    subtitle: "Aggregated results from all campaigns",
+                    mainMetrics: [
+                        { label: "Total Spend (All Campaigns)", value: "$2,625.31" },
+                        { label: "Total Messages", value: "745" },
+                        { label: "Total Engagements", value: "34.6K" },
+                        { label: "Total Page Likes", value: "3K" }
+                    ],
+                    efficiencyTitle: "Combined Messaging & Engagements Campaign Efficiency",
+                    efficiencyMetrics: [
+                        { label: "Avg. Cost/Message", value: "$2.95" },
+                        { label: "Avg. Cost/Engagement", value: "$0.06" },
+                        { label: "Overall CPM", value: "$0.94" },
+                        { label: "Overall Eng. Rate", value: "1.48%" }
+                    ]
+                },
+                {
+                    type: "campaign",
+                    title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/1005747948397059\" target=\"_blank\">1005747948397059</a></span>",
+                    subtitle: "Performance Summary",
+                    imageUrl: "assets/adsid/1005747948397059.jpg",
+                    mainMetrics: [
+                        { label: "Total Spend", value: "$909.70" },
+                        { label: "Impressions", value: "1.05M" },
+                        { label: "Messages", value: "244" },
+                        { label: "Engagements", value: "11.3K" }
+                    ],
+                    efficiencyTitle: "Cost & Efficiency",
+                    efficiencyMetrics: [
+                        { label: "Cost/Msg", value: "$2.98" },
+                        { label: "Cost/Eng", value: "$0.02" },
+                        { label: "CPM", value: "$0.87" },
+                        { label: "Eng. Rate", value: "1.08%" }
+                    ]
+                },
+                {
+                    type: "campaign",
+                    title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/1005835291721658\" target=\"_blank\">1005835291721658</a></span>",
+                    subtitle: "Performance Summary",
+                    imageUrl: "assets/adsid/1005835291721658.jpg",
+                    mainMetrics: [
+                        { label: "Total Spend", value: "$644.24" },
+                        { label: "Impressions", value: "801K" },
+                        { label: "Messages", value: "180" },
+                        { label: "Engagements", value: "13.6K" }
+                    ],
+                    efficiencyTitle: "Cost & Efficiency",
+                    efficiencyMetrics: [
+                        { label: "Cost/Msg", value: "$2.99" },
+                        { label: "Cost/Eng", value: "$0.01" },
+                        { label: "CPM", value: "$0.80" },
+                        { label: "Eng. Rate", value: "1.70%" }
+                    ]
+                },
+                {
+                    type: "campaign",
+                    title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/1006467124991808\" target=\"_blank\">1006467124991808</a></span>",
+                    subtitle: "Performance Summary",
+                    imageUrl: "assets/adsid/1006467124991808.jpg",
+                    mainMetrics: [
+                        { label: "Total Spend", value: "$321.08" },
+                        { label: "Impressions", value: "268K" },
+                        { label: "Messages", value: "99" },
+                        { label: "Engagements", value: "4.9K" }
+                    ],
+                    efficiencyTitle: "Cost & Efficiency",
+                    efficiencyMetrics: [
+                        { label: "Cost/Msg", value: "$2.24" },
+                        { label: "Cost/Eng", value: "$0.02" },
+                        { label: "CPM", value: "$1.20" },
+                        { label: "Eng. Rate", value: "1.83%" }
+                    ]
+                },
+                {
+                    type: "campaign",
+                    title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/1007180378253816\" target=\"_blank\">1007180378253816</a></span>",
+                    subtitle: "Performance Summary",
+                    imageUrl: "assets/adsid/1007180378253816.jpg",
+                    mainMetrics: [
+                        { label: "Total Spend", value: "$322.54" },
+                        { label: "Impressions", value: "218K" },
+                        { label: "Messages", value: "222" },
+                        { label: "Engagements", value: "4.8K" }
+                    ],
+                    efficiencyTitle: "Cost & Efficiency",
+                    efficiencyMetrics: [
+                        { label: "Cost/Msg", value: "$1.00" },
+                        { label: "Cost/Eng", value: "$0.02" },
+                        { label: "CPM", value: "$1.48" },
+                        { label: "Eng. Rate", value: "2.21%" }
+                    ]
+                },
+                {
+                    type: "campaign",
+                    title: "Campaign: <span class=\"text-teal-300\">SsangYong Like June</span>",
+                    subtitle: "Page Like Campaign Summary",
+                    imageUrl: "assets/adsid/1005747948397059.jpg",
+                    mainMetrics: [
+                        { label: "Total Spend", value: "$427.75" },
+                        { label: "Impressions", value: "1.74M" },
+                        { label: "Page Likes", value: "3K" },
+                        { label: "Cost/Like", value: "$0.14" }
+                    ],
+                    efficiencyTitle: "Efficiency Metrics",
+                    efficiencyMetrics: [
+                        { label: "CPM", value: "$0.25" },
+                        { label: "Like Rate", value: "0.17%" }
+                    ]
+                },
+                {
+                    type: "conclusion",
+                    title: "Thank You",
+                    subtitle: "Q&A and Next Steps"
+                }
+            ]
+        };
+
+        // ===================================================================================
+        // PRESENTATION GENERATION LOGIC (No need to edit below this line)
+        // ===================================================================================
+
+        const slideContainer = document.getElementById('slide-container');
+
+        function generateSlides(companyLogoUrl, campaignData) {
+            let slideHTML = '';
+            campaignData.forEach((slideData, index) => {
+                slideHTML += `<div id="slide-${index + 1}" class="slide p-4 md:p-8">`;
+
+                if (slideData.type === 'title') {
+                    slideHTML += `
+                        <div class="text-center">
+                            <img src="${companyLogoUrl}" alt="Company Logo" class="mx-auto mb-8 rounded-lg" onerror="this.onerror=null;this.src='logo_ssyg.png';">
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">${slideData.title}</h1>
+                            <p class="text-lg md:text-xl text-gray-300">${slideData.subtitle}</p>
+                            <p class="mt-8 text-gray-400 no-print">Scroll down to navigate</p>
+                            <svg class="w-8 h-8 mx-auto mt-4 animate-bounce text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                        </div>`;
+                } else if (slideData.type === 'summary') {
+                     slideHTML += `
+                        <div class="slide-content text-center">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">${slideData.title}</h2>
+                            <p class="text-gray-300 mb-8">${slideData.subtitle}</p>
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                                ${slideData.mainMetrics.map(metric => `
+                                    <div class="metric-card p-4 md:p-6 rounded-2xl">
+                                        <p class="text-base lg:text-lg text-gray-300">${metric.label}</p>
+                                        <p class="text-2xl md:text-3xl font-bold text-white">${metric.value}</p>
+                                    </div>`).join('')}
+                            </div>
+                            <div class="mt-6 md:mt-8 bg-white/5 p-6 rounded-2xl">
+                                <h3 class="text-lg md:text-xl font-semibold mb-4">${slideData.efficiencyTitle}</h3>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                     ${slideData.efficiencyMetrics.map(metric => `
+                                        <div><p class="text-gray-400">${metric.label}</p><p class="text-lg md:text-xl font-semibold">${metric.value}</p></div>
+                                     `).join('')}
+                                </div>
+                            </div>
+                        </div>`;
+                } else if (slideData.type === 'campaign') {
+                    slideHTML += `
+                        <div class="slide-content grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                            <div class="ad-creative-placeholder rounded-2xl p-4 aspect-square">
+                                <img src="${slideData.imageUrl}" alt="Ad Creative" class="rounded-lg w-full h-full object-cover" onerror="this.onerror=null;this.src='assets/adsid/placeholder.jpg';">
+                            </div>
+                            <div>
+                                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">${slideData.title}</h2>
+                                <p class="text-gray-300 mb-6">${slideData.subtitle}</p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    ${slideData.mainMetrics.map(metric => `
+                                        <div class="metric-card p-4 md:p-6 rounded-2xl text-center">
+                                            <p class="text-sm md:text-lg text-gray-300">${metric.label}</p>
+                                            <p class="text-xl md:text-3xl font-bold text-white">${metric.value}</p>
+                                        </div>`).join('')}
+                                </div>
+                                <div class="mt-6 bg-white/5 p-4 md:p-6 rounded-2xl">
+                                    <h3 class="text-lg md:text-xl font-semibold mb-4 text-center">${slideData.efficiencyTitle}</h3>
+                                    <div class="grid grid-cols-2 ${slideData.efficiencyMetrics.length > 2 ? 'md:grid-cols-4' : 'md:grid-cols-2'} gap-4 text-center">
+                                        ${slideData.efficiencyMetrics.map(metric => `
+                                            <div><p class="text-gray-400 text-sm">${metric.label}</p><p class="text-base md:text-lg font-semibold">${metric.value}</p></div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                } else if (slideData.type === 'conclusion') {
+                     slideHTML += `
+                        <div class="text-center">
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">${slideData.title}</h1>
+                            <p class="text-lg md:text-xl text-gray-300">${slideData.subtitle}</p>
+                        </div>`;
+                }
+
+                slideHTML += `</div>`;
+            });
+            slideContainer.innerHTML = slideHTML;
+        }
+
+        function getCurrentSlide() {
+            const slides = document.querySelectorAll('.slide');
+            const slideContainer = document.getElementById('slide-container');
+            let currentSlide = { element: slides[0], index: 0 }; // Default
+
+            const containerTop = slideContainer.getBoundingClientRect().top;
+            slides.forEach((slide, index) => {
+                const { top, height } = slide.getBoundingClientRect();
+                if (top <= containerTop + height / 2 && top > containerTop - height / 2) {
+                    currentSlide = { element: slide, index: index };
+                }
+            });
+            return currentSlide;
+        }
+
+        function screenshotCurrentSlide() {
+            const { element: currentSlideElement, index: currentSlideIndex } = getCurrentSlide();
+
+            const msgBox = document.createElement('div');
+            msgBox.textContent = 'Generating screenshot...';
+            msgBox.className = 'no-print fixed top-20 left-1/2 -translate-x-1/2 px-4 py-2 bg-white text-black rounded-lg shadow-lg z-50';
+            document.body.appendChild(msgBox);
+
+            html2canvas(currentSlideElement, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#172a46'
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `campaign-slide-${currentSlideIndex + 1}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                document.body.removeChild(msgBox);
+            }).catch(err => {
+                console.error('Screenshot failed:', err);
+                msgBox.textContent = 'Screenshot failed. See console for details.';
+                setTimeout(() => document.body.removeChild(msgBox), 3000);
+            });
+        }
+
+        function initializeNavigation() {
+            const slides = document.querySelectorAll('.slide');
+            const indicatorContainer = document.getElementById('slide-indicator');
+            indicatorContainer.innerHTML = ''; // Clear existing dots
+
+            slides.forEach((slide, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('indicator-dot');
+                dot.dataset.slide = index + 1;
+                dot.addEventListener('click', () => {
+                    slide.scrollIntoView({ behavior: 'smooth' });
+                });
+                indicatorContainer.appendChild(dot);
+            });
+
+            const updateActiveDot = () => {
+                const { index: currentSlideIndex } = getCurrentSlide();
+                const dots = document.querySelectorAll('.indicator-dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlideIndex);
+                });
+            };
+            
+            updateActiveDot();
+            slideContainer.addEventListener('scroll', updateActiveDot);
+        }
+
+        // Generate the presentation on page load
+        generateSlides(presentationData.companyLogoUrl, presentationData.campaignData);
+        initializeNavigation();
+
+    </script>
+</body>
+</html>
