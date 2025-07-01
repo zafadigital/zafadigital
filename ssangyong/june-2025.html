@@ -169,14 +169,21 @@
 </head>
 <body class="gradient-bg text-white overflow-hidden">
 
-    <div class="no-print fixed top-4 right-4 flex flex-col gap-2 z-50">
-        <button onclick="window.print()" class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition">
-            Print Presentation
-        </button>
-        <button onclick="screenshotCurrentSlide()" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-blue-600 transition">
-            Screenshot Slide
-        </button>
-    </div>
+<div class="no-print fixed top-4 right-4 flex flex-col gap-2 z-50">
+    <button onclick="window.print()" class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition">
+        Print Presentation
+    </button>
+    <button onclick="screenshotCurrentSlide()" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-blue-600 transition">
+        Screenshot Slide
+    </button>
+    <a href="assets/docs/report.pdf" download class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition text-center">
+        Download Report
+    </a>
+    <a href="assets/docs/2025-06-01--2025-07-01_Transactions.zip" download class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition text-center">
+        Download Invoice
+    </a>
+</div>
+
 
     <div id="slide-container" class="slide-container">
         <!-- Slides will be dynamically inserted here -->
