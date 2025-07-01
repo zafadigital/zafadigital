@@ -169,41 +169,50 @@
 </head>
 <body class="gradient-bg text-white overflow-hidden">
 
-<div class="no-print fixed top-4 right-4 flex flex-col gap-2 z-50">
-    <!-- Print -->
-    <button onclick="window.print()" class="flex items-center gap-2 bg-gray-100 text-gray-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition">
-        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-6 0h6v4H6v-4h6z" />
+<!-- Responsive Action Menu Container -->
+<div class="no-print fixed top-4 right-4 z-50 flex flex-col items-end">
+    <!-- Burger Menu Button (visible on screens smaller than md) -->
+    <button id="menu-toggle-btn" class="md:hidden flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
         </svg>
-        Print Presentation
     </button>
 
-    <!-- Screenshot -->
-    <button onclick="screenshotCurrentSlide()" class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-blue-700 transition">
-        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M15 10l4.553-2.276A2 2 0 0122 9.618V14.5a2 2 0 01-1.104 1.789L15 18v-8zM13 5H7a2 2 0 00-2 2v2m0 4v2a2 2 0 002 2h6" />
-        </svg>
-        Screenshot Slide
-    </button>
+    <!-- Action Buttons Container -->
+    <div id="menu-content" class="hidden md:flex flex-col gap-2 mt-2 md:mt-0">
+        <!-- Print -->
+        <button onclick="window.print()" class="flex items-center gap-2 w-full bg-gray-100 text-gray-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition">
+            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-6 0h6v4H6v-4h6z" />
+            </svg>
+            <span class="whitespace-nowrap">Print Presentation</span>
+        </button>
 
-    <!-- Download CSV -->
-    <a href="assets/docs/2025-06-04--2025-07-02_Invoice_Summary.csv" download class="flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-green-200 transition text-center">
-        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M12 5v14m0 0l-4-4m4 4l4-4M5 20h14a2 2 0 002-2V4a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
-        </svg>
-        Download Report CSV
-    </a>
+        <!-- Screenshot -->
+        <button onclick="screenshotCurrentSlide()" class="flex items-center gap-2 w-full bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-blue-700 transition">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M15 10l4.553-2.276A2 2 0 0122 9.618V14.5a2 2 0 01-1.104 1.789L15 18v-8zM13 5H7a2 2 0 00-2 2v2m0 4v2a2 2 0 002 2h6" />
+            </svg>
+            <span class="whitespace-nowrap">Screenshot Slide</span>
+        </button>
 
-    <!-- Download PDF -->
-    <a href="assets/docs/2025-06-01--2025-07-01_Transactions.zip" download class="flex items-center gap-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-purple-200 transition text-center">
-        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M4 4h16v16H4V4zm8 4v8m0 0l-4-4m4 4l4-4" />
-        </svg>
-        Download All Transaction PDF
-    </a>
+        <!-- Download CSV -->
+        <a href="assets/docs/2025-06-04--2025-07-02_Invoice_Summary.csv" download class="flex items-center gap-2 w-full bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-green-200 transition text-center">
+            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 5v14m0 0l-4-4m4 4l4-4M5 20h14a2 2 0 002-2V4a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            <span class="whitespace-nowrap">Download Report CSV</span>
+        </a>
+
+        <!-- Download PDF -->
+        <a href="assets/docs/2025-06-01--2025-07-01_Transactions.zip" download class="flex items-center gap-2 w-full bg-purple-100 text-purple-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-purple-200 transition text-center">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M4 4h16v16H4V4zm8 4v8m0 0l-4-4m4 4l4-4" />
+            </svg>
+            <span class="whitespace-nowrap">Download All Transaction PDF</span>
+        </a>
+    </div>
 </div>
-
-
 
     <div id="slide-container" class="slide-container">
         <!-- Slides will be dynamically inserted here -->
@@ -497,6 +506,32 @@
         // Generate the presentation on page load
         generateSlides(presentationData.companyLogoUrl, presentationData.campaignData);
         initializeNavigation();
+
+        // --- NEW: JavaScript for Menu Toggle ---
+
+        // Get the button and the menu content
+        const menuToggleBtn = document.getElementById('menu-toggle-btn');
+        const menuContent = document.getElementById('menu-content');
+
+        // Add a click event listener to the button
+        menuToggleBtn.addEventListener('click', (event) => {
+            // Stop the click from propagating to the document
+            event.stopPropagation();
+            // Toggle the 'hidden' class on the menu content
+            menuContent.classList.toggle('hidden');
+        });
+
+        // Add a click event listener to the whole document
+        document.addEventListener('click', (event) => {
+            // Check if the menu is currently visible and if the click was outside the menu
+            const isClickInsideMenu = menuContent.contains(event.target);
+            const isMenuVisible = !menuContent.classList.contains('hidden');
+
+            if (isMenuVisible && !isClickInsideMenu) {
+                // If so, hide the menu
+                menuContent.classList.add('hidden');
+            }
+        });
 
     </script>
 </body>
