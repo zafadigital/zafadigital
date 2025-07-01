@@ -176,7 +176,7 @@
     <button onclick="screenshotCurrentSlide()" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-blue-600 transition">
         Screenshot Slide
     </button>
-    <a href="assets/docs/2025-06-04--2025-07-02_Invoice_Summary.csv" download class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition text-center">
+    <a href="assets/docs/2025-06-01--2025-07-01_Invoice_Summary.csv" download class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition text-center">
         Download Report CSV
     </a>
     <a href="assets/docs/2025-06-01--2025-07-01_Transactions.zip" download class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition text-center">
@@ -196,136 +196,174 @@
         // EDIT YOUR DATA HERE
         // ===================================================================================
 
-        // 1. Replace this with the URL to your company's logo
-        const companyLogoUrl = "assets/logo_ssyg.png";
+// 1. Replace this with the URL to your company's logo
+const companyLogoUrl = "assets/logo_geely.png";
 
-        // 2. Edit the campaign data below. Add or remove campaign objects as needed.
-        const presentationData = {
-            companyLogoUrl: "assets/logo_ssyg.png",
-            campaignData: [
-                {
-                    type: "title",
-                    title: "Facebook Ads Performance Review",
-                    subtitle: "Analysis of Engagement & Messaging Campaigns"
-                },
-                {
-                    type: "summary",
-                    title: "Overall Campaign Performance",
-                    subtitle: "Aggregated results from all campaigns",
-                    mainMetrics: [
-                        { label: "Total Spend (All Campaigns)", value: "$2,625.31" },
-                        { label: "Total Messages", value: "745" },
-                        { label: "Total Engagements", value: "34.6K" },
-                        { label: "Total Page Likes", value: "3K" }
-                    ],
-                    efficiencyTitle: "Combined Messaging & Engagements Campaign Efficiency",
-                    efficiencyMetrics: [
-                        { label: "Avg. Cost/Message", value: "$2.95" },
-                        { label: "Avg. Cost/Engagement", value: "$0.06" },
-                        { label: "Overall CPM", value: "$0.94" },
-                        { label: "Overall Eng. Rate", value: "1.48%" }
-                    ]
-                },
-                {
-                    type: "campaign",
-                    title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/1005747948397059\" target=\"_blank\">1005747948397059</a></span>",
-                    subtitle: "Performance Summary",
-                    imageUrl: "assets/adsid/1005747948397059.jpg",
-                    mainMetrics: [
-                        { label: "Total Spend", value: "$909.70" },
-                        { label: "Impressions", value: "1.05M" },
-                        { label: "Messages", value: "244" },
-                        { label: "Engagements", value: "11.3K" }
-                    ],
-                    efficiencyTitle: "Cost & Efficiency",
-                    efficiencyMetrics: [
-                        { label: "Cost/Msg", value: "$2.98" },
-                        { label: "Cost/Eng", value: "$0.02" },
-                        { label: "CPM", value: "$0.87" },
-                        { label: "Eng. Rate", value: "1.08%" }
-                    ]
-                },
-                {
-                    type: "campaign",
-                    title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/1005835291721658\" target=\"_blank\">1005835291721658</a></span>",
-                    subtitle: "Performance Summary",
-                    imageUrl: "assets/adsid/1005835291721658.jpg",
-                    mainMetrics: [
-                        { label: "Total Spend", value: "$644.24" },
-                        { label: "Impressions", value: "801K" },
-                        { label: "Messages", value: "180" },
-                        { label: "Engagements", value: "13.6K" }
-                    ],
-                    efficiencyTitle: "Cost & Efficiency",
-                    efficiencyMetrics: [
-                        { label: "Cost/Msg", value: "$2.99" },
-                        { label: "Cost/Eng", value: "$0.01" },
-                        { label: "CPM", value: "$0.80" },
-                        { label: "Eng. Rate", value: "1.70%" }
-                    ]
-                },
-                {
-                    type: "campaign",
-                    title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/1006467124991808\" target=\"_blank\">1006467124991808</a></span>",
-                    subtitle: "Performance Summary",
-                    imageUrl: "assets/adsid/1006467124991808.jpg",
-                    mainMetrics: [
-                        { label: "Total Spend", value: "$321.08" },
-                        { label: "Impressions", value: "268K" },
-                        { label: "Messages", value: "99" },
-                        { label: "Engagements", value: "4.9K" }
-                    ],
-                    efficiencyTitle: "Cost & Efficiency",
-                    efficiencyMetrics: [
-                        { label: "Cost/Msg", value: "$2.24" },
-                        { label: "Cost/Eng", value: "$0.02" },
-                        { label: "CPM", value: "$1.20" },
-                        { label: "Eng. Rate", value: "1.83%" }
-                    ]
-                },
-                {
-                    type: "campaign",
-                    title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/1007180378253816\" target=\"_blank\">1007180378253816</a></span>",
-                    subtitle: "Performance Summary",
-                    imageUrl: "assets/adsid/1007180378253816.jpg",
-                    mainMetrics: [
-                        { label: "Total Spend", value: "$322.54" },
-                        { label: "Impressions", value: "218K" },
-                        { label: "Messages", value: "222" },
-                        { label: "Engagements", value: "4.8K" }
-                    ],
-                    efficiencyTitle: "Cost & Efficiency",
-                    efficiencyMetrics: [
-                        { label: "Cost/Msg", value: "$1.00" },
-                        { label: "Cost/Eng", value: "$0.02" },
-                        { label: "CPM", value: "$1.48" },
-                        { label: "Eng. Rate", value: "2.21%" }
-                    ]
-                },
-                {
-                    type: "campaign",
-                    title: "Campaign: <span class=\"text-teal-300\">SsangYong Like June</span>",
-                    subtitle: "Page Like Campaign Summary",
-                    imageUrl: "assets/adsid/1005747948397059.jpg",
-                    mainMetrics: [
-                        { label: "Total Spend", value: "$427.75" },
-                        { label: "Impressions", value: "1.74M" },
-                        { label: "Page Likes", value: "3K" },
-                        { label: "Cost/Like", value: "$0.14" }
-                    ],
-                    efficiencyTitle: "Efficiency Metrics",
-                    efficiencyMetrics: [
-                        { label: "CPM", value: "$0.25" },
-                        { label: "Like Rate", value: "0.17%" }
-                    ]
-                },
-                {
-                    type: "conclusion",
-                    title: "Thank You",
-                    subtitle: "Q&A and Next Steps"
-                }
+// 2. This is the generated presentation data for Geely campaigns.
+const presentationData = {
+    companyLogoUrl: "assets/logo_geely.png",
+    campaignData: [
+        {
+            type: "title",
+            title: "Geely - Facebook Ads Performance Review",
+            subtitle: "Analysis of Engagement & Messaging Campaigns"
+        },
+        {
+            type: "summary",
+            title: "Overall Campaign Performance",
+            subtitle: "Aggregated results from all Geely campaigns",
+            mainMetrics: [
+                { label: "Total Spend (All Campaigns)", value: "$2,662.13" },
+                { label: "Total Messages", value: "544" },
+                { label: "Total Engagements", value: "29219" },
+                { label: "Total Page Likes", value: "7.1K" }
+            ],
+            efficiencyTitle: "Combined Messaging & Engagements Campaign Efficiency",
+            efficiencyMetrics: [
+                { label: "Avg. Cost/Message", value: "$3.28" },
+                { label: "Avg. Cost/Engagement", value: "$0.06" },
+                { label: "Overall CPM", value: "$0.59" },
+                { label: "Overall Eng. Rate", value: "0.66%" }
             ]
-        };
+        },
+        {
+            type: "campaign",
+            title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/701094002669837\" target=\"_blank\">701094002669837</a></span>",
+            subtitle: "Performance Summary",
+            imageUrl: "assets/adsid/701094002669837.png",
+            mainMetrics: [
+                { label: "Total Spend", value: "$725.93" },
+                { label: "Impressions", value: "383K" },
+                { label: "Messages", value: "151" },
+                { label: "Engagements", value: "10.2K" }
+            ],
+            efficiencyTitle: "Cost & Efficiency",
+            efficiencyMetrics: [
+                { label: "Cost/Msg", value: "$3.60" },
+                { label: "Cost/Eng", value: "$0.02" },
+                { label: "CPM", value: "$1.89" },
+                { label: "Eng. Rate", value: "2.69%" }
+            ]
+        },
+        {
+            type: "campaign",
+            title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/701771489268755\" target=\"_blank\">701771489268755</a></span>",
+            subtitle: "Performance Summary",
+            imageUrl: "assets/adsid/701771489268755.jpg",
+            mainMetrics: [
+                { label: "Total Spend", value: "$196.57" },
+                { label: "Impressions", value: "82.5K" },
+                { label: "Messages", value: "34" },
+                { label: "Engagements", value: "2.8K" }
+            ],
+            efficiencyTitle: "Cost & Efficiency",
+            efficiencyMetrics: [
+                { label: "Cost/Msg", value: "$4.32" },
+                { label: "Cost/Eng", value: "$0.02" },
+                { label: "CPM", value: "$2.38" },
+                { label: "Eng. Rate", value: "3.39%" }
+            ]
+        },
+        {
+            type: "campaign",
+            title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/702428265869744\" target=\"_blank\">702428265869744</a></span>",
+            subtitle: "Performance Summary",
+            imageUrl: "assets/adsid/702428265869744.jpg",
+            mainMetrics: [
+                { label: "Total Spend", value: "$218.23" },
+                { label: "Impressions", value: "202K" },
+                { label: "Messages", value: "133" },
+                { label: "Engagements", value: "3.3K" }
+            ],
+            efficiencyTitle: "Cost & Efficiency",
+            efficiencyMetrics: [
+                { label: "Cost/Msg", value: "$1.22" },
+                { label: "Cost/Eng", value: "$0.02" },
+                { label: "CPM", value: "$1.08" },
+                { label: "Eng. Rate", value: "1.69%" }
+            ]
+        },
+        {
+            type: "campaign",
+            title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/702667515845819\" target=\"_blank\">702667515845819</a></span>",
+            subtitle: "Performance Summary",
+            imageUrl: "assets/adsid/702667515845819.png",
+            mainMetrics: [
+                { label: "Total Spend", value: "$486.18" },
+                { label: "Impressions", value: "355K" },
+                { label: "Messages", value: "107" },
+                { label: "Engagements", "value": "8.7K" }
+            ],
+            efficiencyTitle: "Cost & Efficiency",
+            efficiencyMetrics: [
+                { label: "Cost/Msg", value: "$3.40" },
+                { label: "Cost/Eng", value: "$0.01" },
+                { label: "CPM", value: "$1.37" },
+                { label: "Eng. Rate", value: "2.49%" }
+            ]
+        },
+        {
+            type: "campaign",
+            title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/706072282172009\" target=\"_blank\">706072282172009</a></span>",
+            subtitle: "Performance Summary",
+            imageUrl: "assets/adsid/706072282172009.png",
+            mainMetrics: [
+                { label: "Total Spend", value: "$131.16" },
+                { label: "Impressions", value: "150K" },
+                { label: "Messages", value: "118" },
+                { label: "Engagements", value: "3.7K" }
+            ],
+            efficiencyTitle: "Cost & Efficiency",
+            efficiencyMetrics: [
+                { label: "Cost/Msg", value: "$0.83" },
+                { label: "Cost/Eng", value: "$0.01" },
+                { label: "CPM", value: "$0.88" },
+                { label: "Eng. Rate", value: "2.53%" }
+            ]
+        },
+        {
+            type: "campaign",
+            title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/709729088472995\" target=\"_blank\">709729088472995</a></span>",
+            subtitle: "Performance Summary",
+            imageUrl: "assets/adsid/709729088472995.jpg",
+            mainMetrics: [
+                { label: "Total Spend", value: "$19.97" },
+                { label: "Impressions", value: "8.6K" },
+                { label: "Messages", value: "1" },
+                { label: "Engagements", value: "398" }
+            ],
+            efficiencyTitle: "Cost & Efficiency",
+            efficiencyMetrics: [
+                { label: "Cost/Msg", value: "$14.70" },
+                { label: "Cost/Eng", value: "$0.01" },
+                { label: "CPM", value: "$2.31" },
+                { label: "Eng. Rate", value: "4.62%" }
+            ]
+        },
+        {
+            type: "campaign",
+            title: "Campaign: <span class=\"text-teal-300\">Geely Like - June 2025</span>",
+            subtitle: "Page Like Campaign Summary",
+            imageUrl: "assets/adsid/like.jpg",
+            mainMetrics: [
+                { label: "Total Spend", value: "$884.09" },
+                { label: "Impressions", value: "3.64M" },
+                { label: "Page Likes", value: "7.1K" },
+                { label: "Cost/Like", value: "$0.12" }
+            ],
+            efficiencyTitle: "Efficiency Metrics",
+            efficiencyMetrics: [
+                { label: "CPM", value: "$0.24" },
+                { label: "Like Rate", value: "0.20%" }
+            ]
+        },
+        {
+            type: "conclusion",
+            title: "Thank You",
+            subtitle: "+855 69 556 444"
+        }
+    ]
+};
 
         // ===================================================================================
         // PRESENTATION GENERATION LOGIC (No need to edit below this line)
