@@ -170,39 +170,19 @@
 <body class="gradient-bg text-white overflow-hidden">
 
 <div class="no-print fixed top-4 right-4 flex flex-col gap-2 z-50">
-    <!-- Print -->
-    <button onclick="window.print()" class="flex items-center gap-2 bg-gray-100 text-gray-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition">
-        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-6 0h6v4H6v-4h6z" />
-        </svg>
+    <button onclick="window.print()" class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition">
         Print Presentation
     </button>
-
-    <!-- Screenshot -->
-    <button onclick="screenshotCurrentSlide()" class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-blue-700 transition">
-        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M15 10l4.553-2.276A2 2 0 0122 9.618V14.5a2 2 0 01-1.104 1.789L15 18v-8zM13 5H7a2 2 0 00-2 2v2m0 4v2a2 2 0 002 2h6" />
-        </svg>
+    <button onclick="screenshotCurrentSlide()" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-blue-600 transition">
         Screenshot Slide
     </button>
-
-    <!-- Download CSV -->
-    <a href="assets/docs/2025-06-04--2025-07-02_Invoice_Summary.csv" download class="flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-green-200 transition text-center">
-        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M12 5v14m0 0l-4-4m4 4l4-4M5 20h14a2 2 0 002-2V4a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
-        </svg>
+    <a href="assets/docs/2025-06-04--2025-07-02_Invoice_Summary.csv" download class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition text-center">
         Download Report CSV
     </a>
-
-    <!-- Download PDF -->
-    <a href="assets/docs/2025-06-01--2025-07-01_Transactions.zip" download class="flex items-center gap-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-purple-200 transition text-center">
-        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M4 4h16v16H4V4zm8 4v8m0 0l-4-4m4 4l4-4" />
-        </svg>
-        Download All Transaction PDF
+    <a href="assets/docs/2025-06-01--2025-07-01_Transactions.zip" download class="bg-white text-black px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition text-center">
+        Download All Transaction PDF 
     </a>
 </div>
-
 
 
     <div id="slide-container" class="slide-container">
