@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Performance Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .slide-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+        .slide {
+            scroll-snap-align: start;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .slide-content {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .metric-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .slide-indicator {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 50;
+        }
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .indicator-dot.active {
+            background-color: white;
+        }
+        .gradient-bg {
+            background: linear-gradient(-45deg, #0a192f, #1e3a5f, #3c5a99, #172a46);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .ad-creative-placeholder {
+            background-color: #0a192f;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            max-width: 450px; /* Increased size */
+            margin: auto;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
+            }
+
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .no-print, .slide-indicator, .animate-bounce {
+                display: none !important;
+            }
+
+            .slide-container {
+                height: auto;
+                overflow: visible;
+                scroll-snap-type: none;
+            }
+
+            .slide {
+                height: 100%; 
+                width: 100%;
+                page-break-after: always;
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+                border: 1px solid #ddd;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            
+            .slide:last-child {
+                page-break-after: avoid;
+            }
+            
+            .slide-content.grid {
+                display: grid !important;
+                grid-template-columns: 1fr 2fr;
+                align-items: center;
+                gap: 1rem !important;
+            }
+
+            .metric-card, .bg-white\/5 {
+                background-color: #f3f4f6 !important;
+                border: 1px solid #e5e7eb !important;
+                box-shadow: none !important;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                padding: 0.5rem !important;
+            }
+            
+            h1, h2, h3, p, div, span, li {
+                color: #000 !important;
+            }
+
+            /* Adjust text sizes for print readability */
+            h1 { font-size: 2rem !important; }
+            h2 { font-size: 1.5rem !important; }
+            h3 { font-size: 1.2rem !important; }
+            p, li { font-size: 0.9rem !important; }
+            .metric-card .text-lg { font-size: 0.9rem !important; }
+            .metric-card .text-3xl { font-size: 1.75rem !important; }
+            .text-xl { font-size: 1rem !important; }
+            
+            .ad-creative-placeholder {
+                max-width: 200px; 
+                border: 2px solid #ccc !important;
+            }
+            
+            .gradient-bg {
+                background: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="gradient-bg text-white overflow-hidden">
+
+<!-- Action Menu -->
+<div class="no-print fixed top-4 right-4 z-50 flex flex-col items-end">
+    <button id="menu-toggle-btn" class="md:hidden flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+    </button>
+    <div id="menu-content" class="hidden md:flex flex-col gap-2 mt-2 md:mt-0">
+        <button onclick="window.print()" class="flex items-center gap-2 w-full bg-gray-100 text-gray-800 px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-gray-200 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-6 0h6v4H6v-4h6z" /></svg>
+            <span>Print</span>
+        </button>
+        <button onclick="screenshotCurrentSlide()" class="flex items-center gap-2 w-full bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg font-semibold hover:bg-blue-700 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A2 2 0 0122 9.618V14.5a2 2 0 01-1.104 1.789L15 18v-8zM13 5H7a2 2 0 00-2 2v2m0 4v2a2 2 0 002 2h6" /></svg>
+            <span>Screenshot</span>
+        </button>
+    </div>
+</div>
+
+<div id="slide-container" class="slide-container">
+    <!-- Slides will be dynamically inserted here -->
+</div>
+
+<div id="slide-indicator" class="slide-indicator no-print hidden md:flex"></div>
+
+<script>
+    // ===================================================================================
+    // DATA IS POPULATED FROM YOUR CSV
+    // ===================================================================================
+// This is the generated presentation data for the Geely Q2 campaigns.
+const presentationData = {
+    companyLogoUrl: "assets/logo_geely.png", // Geely's logo
+    campaignData: [
+        {
+            type: "title",
+            title: "Geely - Q2 2025 Performance Review",
+            subtitle: "A Comprehensive Report for April, May, & June"
+        },
+        {
+            type: "summary",
+            title: "Geely - Q2 2025 Overall Performance",
+            subtitle: "Aggregated results from April, May, & June",
+            mainMetrics: [
+                { label: "Total Spend", value: "$20,368.24" },
+                { label: "Total Messages", value: "3,938" },
+                { label: "Total Engagements", value: "2.57M" },
+                { label: "Total Page Likes", value: "7.1K" }
+            ],
+            efficiencyTitle: "Geely Q2 Efficiency",
+            efficiencyMetrics: [
+                { label: "Avg. Cost/Message", value: "$5.17" },
+                { label: "Avg. Cost/Engagement", value: "$0.01" },
+                { label: "Overall CPM", value: "$1.01" },
+                { label: "Overall Eng. Rate", value: "12.76%" }
+            ]
+        },
+        {
+            type: "summary",
+            title: "Monthly Performance (April 2025)",
+            subtitle: "Aggregated results from all campaigns in April",
+            mainMetrics: [
+                { label: "Total Spend", value: "$6,080.45" },
+                { label: "Total Messages", value: "1,959" },
+                { label: "Total Engagements", value: "1.34M" }
+            ],
+            efficiencyTitle: "Campaign Efficiency - April",
+            efficiencyMetrics: [
+                { label: "Avg. Cost/Message", value: "$3.10" },
+                { label: "Avg. Cost/Engagement", value: "$0.00" },
+                { label: "Overall CPM", value: "$0.90" },
+                { label: "Overall Eng. Rate", value: "19.74%" }
+            ]
+        },
+        {
+            type: "summary",
+            title: "Monthly Performance (May 2025)",
+            subtitle: "Aggregated results from all campaigns in May",
+            mainMetrics: [
+                { label: "Total Spend", value: "$11,625.66" },
+                { label: "Total Messages", value: "1,435" },
+                { label: "Total Engagements", value: "1.2M" }
+            ],
+            efficiencyTitle: "Campaign Efficiency - May",
+            efficiencyMetrics: [
+                { label: "Avg. Cost/Message", value: "$8.10" },
+                { label: "Avg. Cost/Engagement", value: "$0.01" },
+                { label: "Overall CPM", value: "$1.37" },
+                { label: "Overall Eng. Rate", value: "14.16%" }
+            ]
+        },
+        {
+            type: "summary",
+            title: "Monthly Performance (June 2025)",
+            subtitle: "Aggregated results from all campaigns in June",
+            mainMetrics: [
+                { label: "Total Spend", value: "$2,662.13" },
+                { label: "Total Messages", value: "544" },
+                { label: "Total Engagements", value: "29K" },
+                { label: "Total Page Likes", value: "7.1K" }
+            ],
+            efficiencyTitle: "Campaign Efficiency - June",
+            efficiencyMetrics: [
+                { label: "Avg. Cost/Message", value: "$4.89" },
+                { label: "Avg. Cost/Engagement", value: "$0.09" },
+                { label: "Overall CPM", value: "$0.55" },
+                { label: "Overall Eng. Rate", value: "0.75%" }
+            ]
+        },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/628039093308662\" target=\"_blank\">628039093308662</a></span>", subtitle: "Performance Summary (April & May)", imageUrl: "assets/adsid/628039093308662.jpg", mainMetrics: [ { label: "Total Spend", value: "$2148.30" }, { label: "Impressions", value: "3.15M" }, { label: "Messages", value: "557" }, { label: "Engagements", value: "689.1K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$3.86" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$0.68" }, { label: "Eng. Rate", value: "21.88%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/637409585704946\" target=\"_blank\">637409585704946</a></span>", subtitle: "Performance Summary (April & May)", imageUrl: "assets/adsid/637409585704946.jpg", mainMetrics: [ { label: "Total Spend", value: "$2146.32" }, { label: "Impressions", value: "2.51M" }, { label: "Messages", value: "524" }, { label: "Engagements", value: "424.8K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$4.09" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$0.85" }, { label: "Eng. Rate", value: "16.90%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/647775181335053\" target=\"_blank\">647775181335053</a></span>", subtitle: "Performance Summary (April & May)", imageUrl: "assets/adsid/647775181335053.jpg", mainMetrics: [ { label: "Total Spend", value: "$2138.18" }, { label: "Impressions", value: "1.79M" }, { label: "Messages", value: "386" }, { label: "Engagements", value: "329.5K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$5.54" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$1.20" }, { label: "Eng. Rate", value: "18.44%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/648729107906327\" target=\"_blank\">648729107906327</a></span>", subtitle: "Performance Summary (April & May)", imageUrl: "assets/adsid/648729107906327.jpg", mainMetrics: [ { label: "Total Spend", value: "$2156.46" }, { label: "Impressions", value: "3.41M" }, { label: "Messages", value: "506" }, { label: "Engagements", value: "551.2K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$4.26" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$0.63" }, { label: "Eng. Rate", value: "16.16%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/651099127669325\" target=\"_blank\">651099127669325</a></span>", subtitle: "Performance Summary (April & May)", imageUrl: "assets/adsid/651099127669325.jpg", mainMetrics: [ { label: "Total Spend", value: "$2150.01" }, { label: "Impressions", value: "2.69M" }, { label: "Messages", value: "576" }, { label: "Engagements", value: "457.4K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$3.73" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$0.80" }, { label: "Eng. Rate", value: "17.00%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/655142390598332\" target=\"_blank\">655142390598332</a></span>", subtitle: "Performance Summary (April & May)", imageUrl: "assets/adsid/655142390598332.jpg", mainMetrics: [ { label: "Total Spend", value: "$2147.18" }, { label: "Impressions", value: "2.28M" }, { label: "Messages", value: "506" }, { label: "Engagements", value: "452.9K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$4.24" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$0.94" }, { label: "Eng. Rate", value: "19.83%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/6676824865096751\" target=\"_blank\">6676824865096751</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/6676824865096751.jpg", mainMetrics: [ { label: "Total Spend", value: "$135.32" }, { label: "Impressions", value: "193K" }, { label: "Messages", value: "0" }, { label: "Engagements", value: "8.6K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "N/A" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$0.70" }, { label: "Eng. Rate", value: "4.45%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/669257975853440\" target=\"_blank\">669257975853440</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/669257975853440.jpg", mainMetrics: [ { label: "Total Spend", value: "$338.12" }, { label: "Impressions", value: "175K" }, { label: "Messages", value: "43" }, { label: "Engagements", value: "6.2K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$4.73" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$1.94" }, { label: "Eng. Rate", value: "3.54%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/670007432445161\" target=\"_blank\">670007432445161</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/670007432445161.jpg", mainMetrics: [ { label: "Total Spend", value: "$276.68" }, { label: "Impressions", value: "154K" }, { label: "Messages", value: "30" }, { label: "Engagements", value: "5.9K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$4.70" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$1.80" }, { label: "Eng. Rate", value: "3.84%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/670089532436951\" target=\"_blank\">670089532436951</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/670089532436951.jpg", mainMetrics: [ { label: "Total Spend", value: "$403.35" }, { label: "Impressions", value: "313K" }, { label: "Messages", value: "27" }, { label: "Engagements", value: "13.3K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$9.95" }, { label: "Cost/Eng", value: "$0.01" }, { label: "CPM", value: "$1.29" }, { label: "Eng. Rate", value: "4.25%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/671542998958271\" target=\"_blank\">671542998958271</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/671542998958271.jpg", mainMetrics: [ { label: "Total Spend", value: "$137.02" }, { label: "Impressions", value: "268K" }, { label: "Messages", value: "0" }, { label: "Engagements", value: "8.3K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "N/A" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$0.51" }, { label: "Eng. Rate", value: "3.09%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/672361578876413\" target=\"_blank\">672361578876413</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/672361578876413.jpg", mainMetrics: [ { label: "Total Spend", value: "$137.32" }, { label: "Impressions", value: "252K" }, { label: "Messages", value: "0" }, { label: "Engagements", value: "8.6K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "N/A" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$0.54" }, { label: "Eng. Rate", value: "3.39%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/672394892206415\" target=\"_blank\">672394892206415</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/672394892206415.jpg", mainMetrics: [ { label: "Total Spend", value: "$602.92" }, { label: "Impressions", value: "333K" }, { label: "Messages", value: "198" }, { label: "Engagements", value: "7.3K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$2.36" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$1.81" }, { label: "Eng. Rate", value: "2.25%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/672586772187227\" target=\"_blank\">672586772187227</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/672586772187227.jpg", mainMetrics: [ { label: "Total Spend", value: "$214.58" }, { label: "Impressions", value: "282K" }, { label: "Messages", value: "29" }, { label: "Engagements", value: "70.8K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$5.59" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$0.76" }, { label: "Eng. Rate", value: "25.07%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/673128428799728\" target=\"_blank\">673128428799728</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/673128428799728.jpg", mainMetrics: [ { label: "Total Spend", value: "$444.37" }, { label: "Impressions", value: "311K" }, { label: "Messages", value: "97" }, { label: "Engagements", value: "9.5K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$3.19" }, { label: "Cost/Eng", value: "$0.01" }, { label: "CPM", value: "$1.43" }, { label: "Eng. Rate", value: "3.08%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/674904668622104\" target=\"_blank\">674904668622104</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/674904668622104.jpg", mainMetrics: [ { label: "Total Spend", value: "$215.79" }, { label: "Impressions", value: "249K" }, { label: "Messages", value: "29" }, { label: "Engagements", value: "64.1K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$5.64" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$0.87" }, { label: "Eng. Rate", value: "25.75%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/676128381833066\" target=\"_blank\">676128381833066</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/676128381833066.jpg", mainMetrics: [ { label: "Total Spend", value: "$762.23" }, { label: "Impressions", value: "532K" }, { label: "Messages", value: "195" }, { label: "Engagements", value: "131.3K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$3.20" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$1.43" }, { label: "Eng. Rate", value: "24.67%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/676217445157493\" target=\"_blank\">676217445157493</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/676217445157493.jpg", mainMetrics: [ { label: "Total Spend", value: "$138.37" }, { label: "Impressions", value: "274K" }, { label: "Messages", value: "0" }, { label: "Engagements", value: "8.2K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "N/A" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$0.51" }, { label: "Eng. Rate", value: "2.99%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/676824865096751\" target=\"_blank\">676824865096751</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/676824865096751.jpg", mainMetrics: [ { label: "Total Spend", value: "$308.43" }, { label: "Impressions", value: "132K" }, { label: "Messages", value: "139" }, { label: "Engagements", value: "8.6K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$2.22" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$2.34" }, { label: "Eng. Rate", value: "6.62%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/677484065030831\" target=\"_blank\">677484065030831</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/677484065030831.jpg", mainMetrics: [ { label: "Total Spend", value: "$165.97" }, { label: "Impressions", value: "311K" }, { label: "Messages", value: "0" }, { label: "Engagements", value: "10.7K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "N/A" }, { label: "Cost/Eng", value: "$0.01" }, { label: "CPM", value: "$0.53" }, { label: "Eng. Rate", value: "3.43%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/677672951678609\" target=\"_blank\">677672951678609</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/677672951678609.jpg", mainMetrics: [ { label: "Total Spend", value: "$150.66" }, { label: "Impressions", value: "298K" }, { label: "Messages", value: "0" }, { label: "Engagements", value: "10.1K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "N/A" }, { label: "Cost/Eng", value: "$0.01" }, { label: "CPM", value: "$0.51" }, { label: "Eng. Rate", value: "3.39%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/677737191672185\" target=\"_blank\">677737191672185</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/677737191672185.jpg", mainMetrics: [ { label: "Total Spend", value: "$213.53" }, { label: "Impressions", value: "243K" }, { label: "Messages", value: "25" }, { label: "Engagements", value: "90.6K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$6.43" }, { label: "Cost/Eng", value: "$0.00" }, { label: "CPM", value: "$0.88" }, { label: "Eng. Rate", value: "37.28%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/679584268154144\" target=\"_blank\">679584268154144</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/679584268154144.jpg", mainMetrics: [ { label: "Total Spend", value: "$214.15" }, { label: "Impressions", value: "115K" }, { label: "Messages", value: "22" }, { label: "Engagements", value: "4.3K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$7.37" }, { label: "Cost/Eng", value: "$0.01" }, { label: "CPM", value: "$1.85" }, { label: "Eng. Rate", value: "3.81%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/680233624755875\" target=\"_blank\">680233624755875</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/680233624755875.jpg", mainMetrics: [ { label: "Total Spend", value: "$120.38" }, { label: "Impressions", value: "139K" }, { label: "Messages", value: "13" }, { label: "Engagements", value: "4.7K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$6.01" }, { label: "Cost/Eng", value: "$0.01" }, { label: "CPM", value: "$0.87" }, { label: "Eng. Rate", value: "3.36%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/685193367593234\" target=\"_blank\">685193367593234</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/685193367593234.jpg", mainMetrics: [ { label: "Total Spend", value: "$188.66" }, { label: "Impressions", value: "76.5K" }, { label: "Messages", value: "17" }, { label: "Engagements", value: "2.8K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$6.92" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$2.47" }, { label: "Eng. Rate", value: "3.62%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/685858960860008\" target=\"_blank\">685858960860008</a></span>", subtitle: "Performance Summary (May)", imageUrl: "assets/adsid/685858960860008.jpg", mainMetrics: [ { label: "Total Spend", value: "$65.24" }, { label: "Impressions", value: "20.7K" }, { label: "Messages", value: "5" }, { label: "Engagements", value: "1.1K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$8.53" }, { label: "Cost/Eng", value: "$0.02" }, { label: "CPM", value: "$3.15" }, { label: "Eng. Rate", value: "5.34%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/701094002669837\" target=\"_blank\">701094002669837</a></span>", subtitle: "Performance Summary (June)", imageUrl: "assets/adsid/701094002669837.jpg", mainMetrics: [ { label: "Total Spend", value: "$725.93" }, { label: "Impressions", value: "383K" }, { label: "Messages", value: "151" }, { label: "Engagements", value: "10.2K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$4.81" }, { label: "Cost/Eng", value: "$0.07" }, { label: "CPM", value: "$1.89" }, { label: "Eng. Rate", value: "2.67%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/701771489268755\" target=\"_blank\">701771489268755</a></span>", subtitle: "Performance Summary (June)", imageUrl: "assets/adsid/701771489268755.jpg", mainMetrics: [ { label: "Total Spend", value: "$196.57" }, { label: "Impressions", value: "82.5K" }, { label: "Messages", value: "34" }, { label: "Engagements", value: "2.8K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$5.78" }, { label: "Cost/Eng", value: "$0.07" }, { label: "CPM", value: "$2.38" }, { label: "Eng. Rate", value: "3.39%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/702428265869744\" target=\"_blank\">702428265869744</a></span>", subtitle: "Performance Summary (June)", imageUrl: "assets/adsid/702428265869744.jpg", mainMetrics: [ { label: "Total Spend", value: "$218.23" }, { label: "Impressions", value: "202K" }, { label: "Messages", value: "133" }, { label: "Engagements", value: "3.3K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$1.64" }, { label: "Cost/Eng", value: "$0.07" }, { label: "CPM", value: "$1.08" }, { label: "Eng. Rate", value: "1.69%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/702667515845819\" target=\"_blank\">702667515845819</a></span>", subtitle: "Performance Summary (June)", imageUrl: "assets/adsid/702667515845819.jpg", mainMetrics: [ { label: "Total Spend", value: "$486.18" }, { label: "Impressions", value: "355K" }, { label: "Messages", value: "107" }, { label: "Engagements", value: "8.7K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$4.54" }, { label: "Cost/Eng", value: "$0.05" }, { label: "CPM", value: "$1.37" }, { label: "Eng. Rate", value: "2.49%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/706072282172009\" target=\"_blank\">706072282172009</a></span>", subtitle: "Performance Summary (June)", imageUrl: "assets/adsid/706072282172009.jpg", mainMetrics: [ { label: "Total Spend", value: "$131.16" }, { label: "Impressions", value: "150K" }, { label: "Messages", value: "118" }, { label: "Engagements", value: "3.7K" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$1.11" }, { label: "Cost/Eng", value: "$0.04" }, { label: "CPM", value: "$0.88" }, { label: "Eng. Rate", value: "2.53%" } ] },
+        { type: "campaign", title: "Campaign ID: <span class=\"text-blue-300\"><a href=\"https://facebook.com/709729088472995\" target=\"_blank\">709729088472995</a></span>", subtitle: "Performance Summary (June)", imageUrl: "assets/adsid/709729088472995.jpg", mainMetrics: [ { label: "Total Spend", value: "$19.97" }, { label: "Impressions", value: "8.6K" }, { label: "Messages", value: "1" }, { label: "Engagements", value: "398" } ], efficiencyTitle: "Cost & Efficiency", efficiencyMetrics: [ { label: "Cost/Msg", value: "$14.70" }, { label: "Cost/Eng", value: "$0.01" }, { label: "CPM", value: "$2.31" }, { label: "Eng. Rate", value: "4.62%" } ] },
+        { type: "campaign", title: "Campaign: <span class=\"text-teal-300\">Geely Like - June 2025</span>", subtitle: "Page Like Campaign Summary (June)", imageUrl: "assets/adsid/like-june.jpg", mainMetrics: [ { label: "Total Spend", value: "$884.09" }, { label: "Impressions", value: "3.64M" }, { label: "Page Likes", value: "7,102" }, { label: "Cost/Like", value: "$0.12" } ], efficiencyTitle: "Efficiency Metrics", efficiencyMetrics: [ { label: "CPM", value: "$0.24" }, { label: "Like Rate", value: "0.20%" } ] },
+        {
+            type: "conclusion",
+            title: "Q2 Insights & Recommendations",
+            subtitle: "Key takeaways from April, May, & June campaigns for Geely.",
+            points: [
+                "<strong>Massive Engagement & Reach:</strong> The combined efforts in Q2 resulted in over 2.5M engagements and reached a massive audience, indicating very strong brand presence and content appeal.",
+                "<strong>Consistent Lead Generation:</strong> Despite high engagement, messaging campaigns consistently delivered leads, with nearly 4,000 new conversations initiated across the quarter.",
+                "<strong>Strategic Shift in June:</strong> June saw a significant strategic shift towards audience growth with a highly successful 'Like' campaign, acquiring over 7,000 new followers at an efficient cost.",
+                "<strong>Recommendation for Q3:</strong> Leverage the massive, highly engaged audience from Q2 with targeted conversion campaigns in Q3. Focus on creatives that have already proven successful and drive them towards direct calls-to-action (e.g., test drives, brochure downloads) to capitalize on the built-up brand awareness and new follower base."
+            ]
+        },
+        {
+            type: "thank_you",
+            title: "Thank You",
+            subtitle: "+855 69 556 444"
+        }
+    ]
+};
+
+
+    // ===================================================================================
+    // PRESENTATION GENERATION LOGIC (No need to edit below this line)
+    // ===================================================================================
+
+    const slideContainer = document.getElementById('slide-container');
+
+    function generateSlides(companyLogoUrl, campaignData) {
+        let slideHTML = '';
+        campaignData.forEach((slideData, index) => {
+            slideHTML += `<div id="slide-${index + 1}" class="slide p-4 md:p-8">`;
+
+            if (slideData.type === 'title') {
+                slideHTML += `
+                    <div class="text-center">
+                        <img src="${companyLogoUrl}" alt="Company Logo" class="mx-auto mb-8 rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/200x100/0a192f/ffffff?text=Logo';">
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">${slideData.title}</h1>
+                        <p class="text-lg md:text-xl text-gray-300">${slideData.subtitle}</p>
+                        <p class="mt-8 text-gray-400 no-print">Scroll down to navigate</p>
+                        <svg class="w-8 h-8 mx-auto mt-4 animate-bounce text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                    </div>`;
+            } else if (slideData.type === 'summary') {
+                 slideHTML += `
+                    <div class="slide-content text-center">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">${slideData.title}</h2>
+                        <p class="text-gray-300 mb-8">${slideData.subtitle}</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                            ${slideData.mainMetrics.map(metric => `
+                                <div class="metric-card p-4 md:p-6 rounded-2xl">
+                                    <p class="text-base lg:text-lg text-gray-300">${metric.label}</p>
+                                    <p class="text-2xl md:text-3xl font-bold text-white">${metric.value}</p>
+                                </div>`).join('')}
+                        </div>
+                        <div class="mt-6 md:mt-8 bg-white/5 p-6 rounded-2xl">
+                            <h3 class="text-lg md:text-xl font-semibold mb-4">${slideData.efficiencyTitle}</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                 ${slideData.efficiencyMetrics.map(metric => `
+                                    <div><p class="text-gray-400">${metric.label}</p><p class="text-lg md:text-xl font-semibold">${metric.value}</p></div>
+                                 `).join('')}
+                            </div>
+                        </div>
+                    </div>`;
+            } else if (slideData.type === 'campaign') {
+                slideHTML += `
+                    <div class="slide-content grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                        <div class="ad-creative-placeholder rounded-2xl p-4 aspect-square">
+                            <img src="${slideData.imageUrl}" alt="Ad Creative" class="rounded-lg w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x400/0a192f/ffffff?text=Ad+Creative';">
+                        </div>
+                        <div>
+                            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2">${slideData.title}</h2>
+                            <p class="text-gray-300 mb-6">${slideData.subtitle}</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                ${slideData.mainMetrics.map(metric => `
+                                    <div class="metric-card p-4 rounded-xl text-center">
+                                        <p class="text-sm md:text-base text-gray-300">${metric.label}</p>
+                                        <p class="text-lg md:text-2xl font-bold text-white">${metric.value}</p>
+                                    </div>`).join('')}
+                            </div>
+                            <div class="mt-6 bg-white/5 p-4 rounded-xl">
+                                <h3 class="text-base md:text-lg font-semibold mb-4 text-center">${slideData.efficiencyTitle}</h3>
+                                <div class="grid grid-cols-2 ${slideData.efficiencyMetrics.length > 2 ? 'md:grid-cols-4' : 'md:grid-cols-2'} gap-4 text-center">
+                                    ${slideData.efficiencyMetrics.map(metric => `
+                                        <div><p class="text-gray-400 text-xs">${metric.label}</p><p class="text-sm md:text-base font-semibold">${metric.value}</p></div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            } else if (slideData.type === 'conclusion') {
+                 slideHTML += `
+                    <div class="slide-content text-left max-w-4xl">
+                        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">${slideData.title}</h2>
+                        <p class="text-gray-300 mb-8">${slideData.subtitle}</p>
+                        <ul class="list-disc list-inside space-y-4 text-gray-200">
+                            ${slideData.points.map(point => `<li>${point}</li>`).join('')}
+                        </ul>
+                    </div>`;
+            } else if (slideData.type === 'thank_you') {
+                 slideHTML += `
+                    <div class="text-center">
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">${slideData.title}</h1>
+                        <p class="text-lg md:text-xl text-gray-300">${slideData.subtitle}</p>
+                    </div>`;
+            }
+
+            slideHTML += `</div>`;
+        });
+        slideContainer.innerHTML = slideHTML;
+    }
+
+    function getCurrentSlide() {
+        const slides = document.querySelectorAll('.slide');
+        const slideContainer = document.getElementById('slide-container');
+        let currentSlide = { element: slides[0], index: 0 }; // Default
+
+        const containerTop = slideContainer.getBoundingClientRect().top;
+        slides.forEach((slide, index) => {
+            const { top, height } = slide.getBoundingClientRect();
+            if (top <= containerTop + height / 2 && top > containerTop - height / 2) {
+                currentSlide = { element: slide, index: index };
+            }
+        });
+        return currentSlide;
+    }
+
+    function screenshotCurrentSlide() {
+        const { element: currentSlideElement, index: currentSlideIndex } = getCurrentSlide();
+
+        const msgBox = document.createElement('div');
+        msgBox.textContent = 'Generating screenshot...';
+        msgBox.className = 'no-print fixed top-20 left-1/2 -translate-x-1/2 px-4 py-2 bg-white text-black rounded-lg shadow-lg z-50';
+        document.body.appendChild(msgBox);
+
+        html2canvas(currentSlideElement, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#172a46'
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `campaign-slide-${currentSlideIndex + 1}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            document.body.removeChild(msgBox);
+        }).catch(err => {
+            console.error('Screenshot failed:', err);
+            msgBox.textContent = 'Screenshot failed. See console for details.';
+            setTimeout(() => document.body.removeChild(msgBox), 3000);
+        });
+    }
+
+    function initializeNavigation() {
+        const slides = document.querySelectorAll('.slide');
+        const indicatorContainer = document.getElementById('slide-indicator');
+        indicatorContainer.innerHTML = ''; // Clear existing dots
+
+        slides.forEach((slide, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('indicator-dot');
+            dot.dataset.slide = index + 1;
+            dot.addEventListener('click', () => {
+                slide.scrollIntoView({ behavior: 'smooth' });
+            });
+            indicatorContainer.appendChild(dot);
+        });
+
+        const updateActiveDot = () => {
+            const { index: currentSlideIndex } = getCurrentSlide();
+            const dots = document.querySelectorAll('.indicator-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlideIndex);
+            });
+        };
+        
+        updateActiveDot();
+        slideContainer.addEventListener('scroll', updateActiveDot);
+    }
+
+    // Generate the presentation on page load
+    generateSlides(presentationData.companyLogoUrl, presentationData.campaignData);
+    initializeNavigation();
+
+    // --- Menu Toggle ---
+    const menuToggleBtn = document.getElementById('menu-toggle-btn');
+    const menuContent = document.getElementById('menu-content');
+    menuToggleBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        menuContent.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (event) => {
+        if (!menuContent.classList.contains('hidden') && !menuContent.contains(event.target)) {
+            menuContent.classList.add('hidden');
+        }
+    });
+
+</script>
+</body>
+</html>
