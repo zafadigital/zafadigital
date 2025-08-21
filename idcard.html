@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Student ID Card Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to complement Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* A simple toast notification style */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 9999px;
+            background-color: #2d3748;
+            color: white;
+            font-size: 14px;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -10px);
+        }
+        
+        /* Styles for the printable ID card */
+        .id-card-print {
+            width: 100.6mm;
+            height: 70.98mm;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif; /* Font to match the image */
+            position: relative; /* Crucial for positioning overlays */
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+        }
+        
+        /* New styles for the larger preview */
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background-color: #f3f4f6;
+            border-radius: 1rem;
+            min-height: 400px; /* Adjusted for new card height */
+        }
+        .preview-scaler {
+            transform: scale(1.4); /* Adjusted scale */
+            transform-origin: center;
+            transition: transform 0.3s ease;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-8 no-print">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Student ID Card Generator</h1>
+            <p class="text-md text-gray-600 mt-2">Fill in the details below, or click "Generate" for random data.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+            <!-- Editor Section -->
+            <div class="lg:col-span-3 bg-white p-6 rounded-2xl shadow-lg no-print">
+                <h2 class="text-xl font-bold mb-6 border-b pb-3">Editor</h2>
+                <div class="space-y-5">
+                    <!-- Student Information -->
+                    <div>
+                        <h3 class="font-semibold text-lg mb-3 text-indigo-700">Student Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <div>
+                                <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
+                                <input type="text" id="year" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            </div>
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            </div>
+                             <div>
+                                <label for="dob" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                                <input type="text" id="dob" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            </div>
+                            <div>
+                                <label for="father" class="block text-sm font-medium text-gray-700 mb-1">Father's Name</label>
+                                <input type="text" id="father" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            </div>
+                            <div>
+                                <label for="mother" class="block text-sm font-medium text-gray-700 mb-1">Mother's Name</label>
+                                <input type="text" id="mother" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            </div>
+                            <div>
+                                <label for="course" class="block text-sm font-medium text-gray-700 mb-1">Course</label>
+                                <input type="text" id="course" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            </div>
+                             <div>
+                                <label for="roll" class="block text-sm font-medium text-gray-700 mb-1">Roll No.</label>
+                                <input type="text" id="roll" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            </div>
+                             <div class="md:col-span-2">
+                                <label for="photo" class="block text-sm font-medium text-gray-700 mb-1">Student Photo</label>
+                                <input type="file" id="photo" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="lg:col-span-2">
+                <div class="sticky top-8">
+                    <h2 class="text-xl font-bold mb-4 text-center lg:text-left no-print">Live Preview</h2>
+                    <div class="preview-container">
+                        <div class="print-area preview-scaler">
+                            <div id="preview" class="id-card-print shadow-xl" style="background-image: url('idcard.png');">
+                                <!-- Overlays for dynamic content -->
+                                
+                                <!-- Year -->
+                                <div class="absolute" style="top: 29%; left: 3.5%; width: 28%;">
+                                    <div class="bg-blue-600 text-white font-bold text-[10px] py-0.5 rounded-sm flex items-center justify-center w-full h-full" id="p_year"></div>
+                                </div>
+                                
+                                <!-- Photo -->
+                                <div class="absolute" style="top: 40%; left: 3.5%; width: 28%; height: 37%;">
+                                    <div class="w-full h-full bg-gray-200 rounded-sm flex items-center justify-center overflow-hidden border-2 border-black">
+                                        <img id="p_photo" class="w-full h-full object-cover" src="" alt="Student Photo" style="display: none;">
+                                        <svg id="p_photo_placeholder" class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    </div>
+                                </div>
+
+                                <!-- Details Table -->
+                                <div class="absolute" style="top: 34%; left: 35%; width: 62%;">
+                                     <p class="font-bold text-blue-700 text-center text-[11px] tracking-wider mb-1">STUDENT IDENTITY CARD</p>
+                                     <table class="w-full text-[10px] font-sans">
+                                        <tbody>
+                                            <tr><td class="font-bold pr-1 w-2/5 py-0.5 leading-tight">Name</td><td class="font-bold py-0.5 leading-tight">: <span id="p_name" class="text-red-600"></span></td></tr>
+                                            <tr><td class="font-bold pr-1 py-0.5 leading-tight">Father's Name</td><td class="font-bold py-0.5 leading-tight">: <span id="p_father"></span></td></tr>
+                                            <tr><td class="font-bold pr-1 py-0.5 leading-tight">Mother's Name</td><td class="font-bold py-0.5 leading-tight">: <span id="p_mother"></span></td></tr>
+                                            <tr><td class="font-bold pr-1 py-0.5 leading-tight">Course</td><td class="font-bold py-0.5 leading-tight">: <span id="p_course"></span></td></tr>
+                                            <tr><td class="font-bold pr-1 py-0.5 leading-tight">Roll No.</td><td class="font-bold py-0.5 leading-tight">: <span id="p_roll"></span></td></tr>
+                                            <tr><td class="font-bold pr-1 py-0.5 leading-tight">Date of Birth</td><td class="font-bold py-0.5 leading-tight">: <span id="p_dob"></span></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 mt-4 justify-center lg:justify-start no-print">
+                        <button id="btnGenerate" class="w-full sm:w-auto flex-1 bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition shadow-md flex items-center justify-center gap-2">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                            Generate
+                        </button>
+                        <button id="btnDownload" class="w-full sm:w-auto flex-1 bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition shadow-md flex items-center justify-center gap-2">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            Download Card
+                        </button>
+                         <button id="btnCopy" class="w-full sm:w-auto flex-1 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-md flex items-center justify-center gap-2">
+                           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" /><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" /></svg>
+                            Copy Info
+                        </button>
+                        <button id="btnReset" class="w-full sm:w-auto flex-1 bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 transition shadow-md flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" /></svg>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Placeholder -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Default data from the new provided image ---
+            const initialData = {
+                year: "2019-2022",
+                name: "SIDDHANT SHUBHAM",
+                father: "BIPUL GOURAV",
+                mother: "Seema Sinha",
+                course: "B.Com (Prog.)",
+                roll: "2019/2526",
+                dob: "12.12.2001",
+                photo: "" // No default photo, show placeholder
+            };
+
+            // --- Clone initial data for resets ---
+            let currentData = { ...initialData };
+
+            // --- Element References ---
+            const inputs = {
+                year: document.getElementById('year'), name: document.getElementById('name'),
+                father: document.getElementById('father'), mother: document.getElementById('mother'),
+                course: document.getElementById('course'), roll: document.getElementById('roll'),
+                dob: document.getElementById('dob'), photo: document.getElementById('photo')
+            };
+
+            const previews = {
+                year: document.getElementById('p_year'), name: document.getElementById('p_name'),
+                father: document.getElementById('p_father'), mother: document.getElementById('p_mother'),
+                course: document.getElementById('p_course'), roll: document.getElementById('p_roll'),
+                dob: document.getElementById('p_dob'), photo: document.getElementById('p_photo'),
+                photoPlaceholder: document.getElementById('p_photo_placeholder')
+            };
+            
+            const btnGenerate = document.getElementById('btnGenerate');
+            const btnDownload = document.getElementById('btnDownload');
+            const btnCopy = document.getElementById('btnCopy');
+            const btnReset = document.getElementById('btnReset');
+            const toast = document.getElementById('toast');
+            
+            // --- Data for Random Generation ---
+            // --- Data for Random Generation (10k unique names possible) ---
+            const firstNames = [
+              "Aarav","Vivaan","Aditya","Vihaan","Arjun","Sai","Reyansh","Ayaan","Krishna","Ishaan",
+              "Kabir","Rudra","Aryan","Atharv","Dhruv","Rohan","Samar","Om","Manav","Dev",
+              "Ananya","Diya","Saanvi","Aadhya","Myra","Aarohi","Pari","Riya","Siya","Navya",
+              "Ira","Meera","Anvi","Kavya","Trisha","Tanvi","Avni","Nisha","Pooja","Neha",
+              "Harsh","Mihir","Yash","Rajat","Varun","Akash","Kunal","Rahul","Abhinav","Nitin",
+              "Sneha","Shreya","Prachi","Ishita","Rashmi","Ankita","Payal","Komal","Swati","Tanya",
+              "Siddharth","Naman","Gaurav","Advik","Harshit","Kartik","Laksh","Pranav","Arnav","Raghav",
+              "Muskan","Riddhi","Khushi","Jhanvi","Sanya","Anushka","Manya","Shanaya","Ayesha","Simran",
+              "Aditi","Pallavi","Smita","Veena","Lata","Sunita","Rekha","Kiran","Geeta","Sita"
+            ];
+
+            const lastNames = [
+              "Sharma","Verma","Gupta","Singh","Kumar","Patel","Reddy","Mehta","Shah","Joshi",
+              "Das","Khan","Malhotra","Kapoor","Chopra","Mishra","Pandey","Yadav","Bose","Banerjee",
+              "Mukherjee","Chatterjee","Sengupta","Nair","Pillai","Menon","Iyer","Subramanian","Rao","Shetty",
+              "Gowda","Naidu","Rastogi","Bhatia","Arora","Duggal","Grover","Sodhi","Ahluwalia","Gill",
+              "Sidhu","Sandhu","Randhawa","Sekhon","Kohli","Aggarwal","Bagga","Bajaj","Talwar","Tandon",
+              "Tripathi","Dwivedi","Shukla","Chaudhary","Thakur","Rawat","Negi","Biswas","Roy","Saha",
+              "Dasgupta","Ganguly","Chakraborty","Sen","Pal","Dey","Parikh","Desai","Modi","Bhandari",
+              "Pathak","Tyagi","Chauhan","Solanki","Jadeja","Prajapati","Bhatt","Pandit","Josan","Dhawan",
+              "Oberoi","Mann","Gill","Brar","Pannu","Toor","Saluja","Nanda","Vohra","Ahmad",
+              "Syed","Ansari","Hussain","Qureshi","Kazi","Mirza","Farooq","Sheikh","Usmani","Zafar"
+            ];
+           const courses = ["B.Tech Computer Science", "B.Sc Physics", "B.A. History", "B.Com (Prog.)", "B.Tech Mechanical Eng.", "MBBS", "B.A. Economics", "B.Sc Chemistry"];
+
+            // --- Functions ---
+
+            /**
+             * Generates random student data and updates the application state.
+             */
+            function generateRandomData() {
+                const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const fatherFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const motherFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                
+                const birthYear = new Date().getFullYear() - 18 - Math.floor(Math.random() * 5); // Age 18-22
+                const birthMonth = Math.floor(Math.random() * 12) + 1;
+                const birthDay = Math.floor(Math.random() * 28) + 1;
+                const dob = `${birthDay.toString().padStart(2, '0')}.${birthMonth.toString().padStart(2, '0')}.${birthYear}`;
+
+                const possibleStartYears = [2023, 2024, 2025];
+                const startYear = possibleStartYears[Math.floor(Math.random() * possibleStartYears.length)];
+                const academicYear = `${startYear}-${startYear + 3}`;
+
+                const newData = {
+                    name: `${randomFirstName.toUpperCase()} ${randomLastName.toUpperCase()}`,
+                    father: `${fatherFirstName.toUpperCase()} ${randomLastName.toUpperCase()}`,
+                    mother: `${motherFirstName} ${randomLastName}`,
+                    course: courses[Math.floor(Math.random() * courses.length)],
+                    roll: `${startYear}/${Math.floor(1000 + Math.random() * 9000)}`,
+                    dob: dob,
+                    year: academicYear,
+                    photo: `https://picsum.photos/300/400?random=${Math.random()}` // Random image
+                };
+
+                currentData = newData;
+                populateForm();
+                updatePreview();
+                showToast('Generated new student data!');
+            }
+
+            /**
+             * Updates the preview elements with the current data.
+             */
+            function updatePreview() {
+                for (const key in previews) {
+                    if (previews.hasOwnProperty(key) && currentData.hasOwnProperty(key)) {
+                        const element = previews[key];
+                        const value = currentData[key] || ' ';
+                        
+                        if (key === 'photo') {
+                            if (value) {
+                                element.src = value;
+                                element.style.display = 'block';
+                                previews.photoPlaceholder.style.display = 'none';
+                            } else {
+                                element.src = '';
+                                element.style.display = 'none';
+                                previews.photoPlaceholder.style.display = 'block';
+                            }
+                        } else if (element) {
+                            element.textContent = value;
+                        }
+                    }
+                }
+            }
+
+            /**
+             * Populates the form inputs with the current data.
+             */
+            function populateForm() {
+                for (const key in inputs) {
+                    if (inputs.hasOwnProperty(key) && currentData.hasOwnProperty(key)) {
+                        const input = inputs[key];
+                        if (input.type !== 'file') {
+                            input.value = currentData[key];
+                        }
+                    }
+                }
+            }
+            
+            /**
+             * Shows a toast notification.
+             * @param {string} message - The message to display.
+             */
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // --- Event Listeners ---
+
+            // Listen for input on all form fields for real-time updates
+            for (const key in inputs) {
+                if (inputs.hasOwnProperty(key) && inputs[key].type !== 'file') {
+                    inputs[key].addEventListener('input', (e) => {
+                        currentData[key] = e.target.value;
+                        updatePreview();
+                    });
+                }
+            }
+
+            // Photo upload handler
+            inputs.photo.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        currentData.photo = event.target.result;
+                        updatePreview();
+                        showToast('Photo updated successfully!');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Generate button handler
+            btnGenerate.addEventListener('click', generateRandomData);
+
+            // Download button handler
+            btnDownload.addEventListener('click', () => {
+                const previewElement = document.getElementById('preview');
+                const scalerElement = previewElement.closest('.preview-scaler');
+
+                // Temporarily reset scale for accurate capture
+                const originalTransform = scalerElement.style.transform;
+                scalerElement.style.transform = 'scale(1)';
+
+                html2canvas(previewElement, {
+                    useCORS: true, // Important for external images
+                    scale: 3 // Increase resolution for better quality
+                }).then(canvas => {
+                    // Restore original scale
+                    scalerElement.style.transform = originalTransform;
+
+                    // Create a link to download the image
+                    const link = document.createElement('a');
+                    link.download = 'student-id-card.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    showToast('Card downloaded!');
+                }).catch(err => {
+                    // Restore scale even if there's an error
+                    scalerElement.style.transform = originalTransform;
+                    console.error('Oops, something went wrong!', err);
+                    showToast('Could not download card.');
+                });
+            });
+
+            // Copy button handler
+            btnCopy.addEventListener('click', () => {
+                const school = "SHAHEED BHAGAT SINGH EVENING COLLEGE";
+                const country = "India";
+                
+                const nameParts = currentData.name.split(' ');
+                const firstName = nameParts[0] || '';
+                const lastName = nameParts.slice(1).join(' ') || '';
+                
+                const email = `${firstName.toLowerCase()}.${lastName.toLowerCase().replace(/\s/g, '')}@example.com`;
+
+                const dobParts = currentData.dob.split('.');
+                const day = dobParts[0] || '';
+                const monthNum = parseInt(dobParts[1], 10);
+                const year = dobParts[2] || '';
+                
+                const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                const monthName = isNaN(monthNum) ? '' : months[monthNum - 1];
+
+                const copyText = [school, firstName, lastName, monthName, day, year, email, country].join('|');
+                
+                // Copy to clipboard
+                 const textArea = document.createElement("textarea");
+                textArea.value = copyText;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast('Student info copied!');
+                } catch (err) {
+                    showToast('Failed to copy info.');
+                }
+                document.body.removeChild(textArea);
+            });
+
+            // Reset button handler
+            btnReset.addEventListener('click', () => {
+                if (confirm('Are you sure you want to reset all fields to their default values?')) {
+                    currentData = { ...initialData };
+                    populateForm();
+                    updatePreview();
+                    inputs.photo.value = ''; // Clear file input
+                    showToast('Form has been reset.');
+                }
+            });
+
+            // --- Initial Load ---
+            populateForm();
+            updatePreview();
+        });
+    </script>
+</body>
+</html>
