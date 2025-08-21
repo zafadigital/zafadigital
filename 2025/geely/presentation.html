@@ -1,228 +1,350 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geely Cambodia - Social Media Proposal</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
+        /* Custom styles for the presentation */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden; /* Prevent scrolling */
         }
-        .section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 6rem 1rem; /* Increased padding for better spacing */
-            border-bottom: 1px solid #e5e7eb;
+        /* Style for the slide transition */
+        .slide {
+            transition: opacity 0.5s ease-in-out;
         }
-        .section:last-child {
-            border-bottom: none;
-        }
-        .card {
-            background-color: white;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        @media (min-width: 768px) {
-            .card {
-                padding: 2rem;
-            }
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-        .pill {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-weight: 500;
-            font-size: 0.875rem;
-        }
-        .icon-bg {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 4rem;
-            height: 4rem;
-            border-radius: 9999px;
-            margin: 0 auto 1rem auto;
-        }
-        .nav-link {
-            transition: color 0.3s ease;
-            padding: 0.5rem 0;
-            position: relative;
-        }
-        .nav-link:hover {
-            color: #3b82f6;
-        }
-        .nav-link::after {
-            content: '';
+        .slide.hidden {
+            opacity: 0;
             position: absolute;
-            bottom: 0;
+            pointer-events: none;
+        }
+        .img-cover {
+            position: absolute;
+            top: 0;
             left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #3b82f6;
-            transition: width 0.3s ease;
-        }
-        .nav-link:hover::after {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
         }
-        .feature-card {
-            background: #ffffff;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            text-align: center;
-            border: 1px solid #e5e7eb;
+        .img-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2;
         }
-        .data-card {
-            background-color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .slide-content {
+            position: relative;
+            z-index: 3;
         }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="bg-gray-800">
 
-    <!-- Header / Navigation -->
-    <header class="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-50 shadow-sm">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-gray-900">Geely Cambodia Proposal</h1>
-            <nav class="hidden lg:flex space-x-4">
-                <a href="#objectives" class="nav-link text-gray-600 font-medium">Objectives</a>
-                <a href="#data-analysis" class="nav-link text-gray-600 font-medium">Data Analysis</a>
-                <a href="#audience" class="nav-link text-gray-600 font-medium">Audience</a>
-                <a href="#coolray-deep-dive" class="nav-link text-gray-600 font-medium">Coolray</a>
-                <a href="#starray-deep-dive" class="nav-link text-gray-600 font-medium">Starray</a>
-                <a href="#strategy" class="nav-link text-gray-600 font-medium">Strategy</a>
-                <a href="#next-steps" class="nav-link text-gray-600 font-medium">Next Steps</a>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        <!-- Slide 1: Title -->
-        <section id="title" class="section bg-cover bg-center" style="background-image: url('https://img.goodfon.com/wallpaper/big/f/f6/geely-coolray-2023-1.jpg');">
-            <div class="bg-black/50 absolute inset-0"></div>
-            <div class="container mx-auto text-center relative z-10">
-                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4">A Strategic Facebook Content Plan</h1>
-                <p class="text-2xl text-blue-300 font-medium mb-8">Prepared for Geely Cambodia</p>
-                <p class="text-lg text-gray-200">August 11, 2025</p>
-            </div>
-        </section>
-
-        <!-- Slide 2: Objectives -->
-        <section id="objectives" class="section bg-gray-50">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl md:text-5xl font-bold mb-2">Shifting from Awareness to <span class="text-blue-600">Action</span></h2>
-                <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">Our strategy is focused on achieving measurable results by targeting three key business objectives.</p>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="card text-center"><div class="icon-bg bg-blue-100 text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H8m4-4v8m9-4a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div><h3 class="text-xl font-bold mb-2">Drive Showroom Traffic</h3><p class="text-gray-600">Create compelling content that encourages potential customers to visit a showroom for an in-person experience.</p></div>
-                    <div class="card text-center"><div class="icon-bg bg-green-100 text-green-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg></div><h3 class="text-xl font-bold mb-2">Increase Quality Inboxes</h3><p class="text-gray-600">Generate leads from genuinely interested buyers who are ready to discuss features, pricing, and financing.</p></div>
-                    <div class="card text-center"><div class="icon-bg bg-purple-100 text-purple-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg></div><h3 class="text-xl font-bold mb-2">Identify the Real Customer</h3><p class="text-gray-600">Build a clear profile of the Geely buyer in Cambodia to create more effective and targeted marketing campaigns.</p></div>
-                </div>
-            </div>
-        </section>
+    <!-- Main Presentation Container -->
+    <div id="presentation-container" class="w-screen h-screen bg-white flex flex-col">
         
-        <!-- Slide 3: Data-Driven Audience Analysis -->
-        <section id="data-analysis" class="section bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1974&auto=format&fit=crop');">
-            <div class="bg-black/60 absolute inset-0"></div>
-            <div class="container mx-auto text-center relative z-10">
-                <h2 class="text-3xl md:text-5xl font-bold mb-2 text-white">Data-Driven Audience Analysis</h2>
-                <p class="text-lg text-blue-300 mb-12 max-w-3xl mx-auto">Our personas are based on real data from Cambodia's digital landscape.</p>
-                <div class="grid md:grid-cols-4 gap-8 text-gray-800">
-                    <div class="data-card"><h3 class="text-4xl font-extrabold text-blue-600 mb-2">~13M</h3><p class="font-semibold">Facebook Users</p><p class="text-sm text-gray-600">A massive, digitally-engaged population ready to connect with brands.</p></div>
-                    <div class="data-card"><h3 class="text-4xl font-extrabold text-blue-600 mb-2">25-44</h3><p class="font-semibold">Core Age Group</p><p class="text-sm text-gray-600">This demographic forms the largest, most active, and highest-spending segment on the platform.</p></div>
-                    <div class="data-card"><h3 class="text-4xl font-extrabold text-blue-600 mb-2">65%</h3><p class="font-semibold">Urban Audience</p><p class="text-sm text-gray-600">Concentrated in major cities like Phnom Penh, with higher disposable income.</p></div>
-                    <div class="data-card"><h3 class="text-4xl font-extrabold text-blue-600 mb-2">$800+</h3><p class="font-semibold">Target Monthly Income</p><p class="text-sm text-gray-600">Our target personas fall into the middle-to-upper income brackets, capable of new car ownership.</p></div>
+        <!-- Slide Area -->
+        <div id="slides-wrapper" class="relative flex-grow w-full">
+            <!-- Slide 1: Title -->
+            <div id="slide-1" class="slide w-full h-full text-white">
+                <img src="https://scontent.fpnh2-1.fna.fbcdn.net/v/t39.30808-6/487697667_650374097741828_8120467163881016225_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6V7Bml0Iy87Aecef6yatvfrghbAQwt3V-uCFsBDC3dapBWCLsm3uug5NFlxJmwhoAvCIRGJxIpVXpP2e6VdKS&_nc_ohc=HgJPpbF9pIAQ7kNvwFLtKjV&_nc_oc=Adkg2iDHUZiGqFu4yDtu9F1wIck5uNYg9oPGzYSLsIR7YmkPDNQ6tgKzkc63drjOPyQ&_nc_zt=23&_nc_ht=scontent.fpnh2-1.fna&_nc_gid=DS7nITggNKYU29K_vySSSA&oh=00_AfWtQ1LIEREwd049vciW8tNaWytW1RzrWmQcZtUqCDm6Vg&oe=68AC3F46" alt="Geely Coolray" class="img-cover" onerror="this.onerror=null;this.src='https://placehold.co/1920x1080/334155/ffffff?text=Geely+Coolray';">
+                <div class="img-overlay"></div>
+                <div class="slide-content w-full h-full p-8 md:p-12 flex flex-col items-center justify-center text-center">
+                    <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-4">A Strategic Facebook Content Plan</h1>
+                    <p class="text-2xl text-blue-300 font-medium mb-8">Prepared for Geely Cambodia</p>
+                    <p class="text-lg text-gray-200">August 11, 2025</p>
                 </div>
-                <p class="text-xs text-gray-300 mt-8 italic absolute">Source: Analysis based on DataReportal Digital 2024, World Bank statistics, and internal market estimates for Q3 2025.</p>
             </div>
-        </section>
 
-        <!-- Slide 4: Audience -->
-        <section id="audience" class="section">
-            <div class="container mx-auto">
+            <!-- Slide 2: Objectives -->
+            <div id="slide-2" class="slide hidden w-full h-full p-8 md:p-12 flex flex-col items-center justify-center bg-gray-50">
+                <div class="text-center">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-2">Shifting from Awareness to <span class="text-blue-600">Action</span></h2>
+                    <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">Our strategy is focused on achieving measurable results by targeting three key business objectives.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl">
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://placehold.co/128x128/e0f2fe/0284c7?text=Visit+Us" alt="Showroom" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Drive Showroom Traffic</h3>
+                        <p class="text-gray-600">Encourage potential customers to visit for an in-person experience.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://placehold.co/128x128/dcfce7/16a34a?text=Inbox" alt="Messages" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Increase Quality Inboxes</h3>
+                        <p class="text-gray-600">Generate leads from genuinely interested buyers ready to discuss details.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://placehold.co/128x128/f3e8ff/7e22ce?text=Profile" alt="Customer Profile" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Identify the Real Customer</h3>
+                        <p class="text-gray-600">Build a clear profile of the Geely buyer to create more effective campaigns.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Data-Driven Audience Analysis -->
+            <div id="slide-3" class="slide hidden w-full h-full text-white">
+                 <img src="https://brains-comm.com/wp-content/uploads/2023/04/CambodiasDigitalLandscape_KeyInsights.jpg" alt="Social Media Analytics" class="img-cover" onerror="this.onerror=null;this.src='https://placehold.co/1920x1080/1e293b/ffffff?text=Data+Analysis';">
+                 <div class="img-overlay"></div>
+                 <div class="slide-content w-full h-full p-8 md:p-12 flex flex-col items-center justify-center text-center">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-2">Data-Driven Audience Analysis</h2>
+                    <p class="text-lg text-blue-300 mb-12 max-w-3xl mx-auto">Our personas are based on real data from Cambodia's digital landscape.</p>
+                    <div class="grid md:grid-cols-4 gap-6 w-full max-w-5xl">
+                        <div class="bg-white/20 backdrop-blur-md p-4 rounded-lg"><h3 class="text-4xl font-extrabold text-white mb-2">~13M</h3><p class="font-semibold">Facebook Users</p></div>
+                        <div class="bg-white/20 backdrop-blur-md p-4 rounded-lg"><h3 class="text-4xl font-extrabold text-white mb-2">25-44</h3><p class="font-semibold">Core Age Group</p></div>
+                        <div class="bg-white/20 backdrop-blur-md p-4 rounded-lg"><h3 class="text-4xl font-extrabold text-white mb-2">65%</h3><p class="font-semibold">Urban Audience</p></div>
+                        <div class="bg-white/20 backdrop-blur-md p-4 rounded-lg"><h3 class="text-4xl font-extrabold text-white mb-2">$800+</h3><p class="font-semibold">Target Monthly Income</p></div>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Slide 4: Audience Personas -->
+            <div id="slide-4" class="slide hidden w-full h-full p-8 md:p-12 flex flex-col items-center justify-center">
                 <div class="text-center mb-12"><h2 class="text-3xl md:text-5xl font-bold mb-2">Who Are We Talking To?</h2><p class="text-lg text-gray-600 max-w-3xl mx-auto">Based on the data, we've refined our two key customer personas.</p></div>
-                <div class="grid md:grid-cols-2 gap-8 items-stretch">
-                    <div class="card flex flex-col"><img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=2070&auto=format&fit=crop" alt="Modern Professional with sports car" class="rounded-lg mb-6 w-full h-64 object-cover"><h3 class="text-3xl font-bold mb-4">The Modern Professional</h3><p class="pill bg-red-100 text-red-800 mb-4">Target Car: Geely Coolray</p><ul class="space-y-3 text-gray-600 flex-grow mb-6">
-                        <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10003;</span><strong>Age & Status:</strong> 28-40, single or young couple, manager or SME owner.</li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10003;</span><strong>Est. Income:</strong> $800 - $1,800 / month.</li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10003;</span><strong>Lifestyle:</strong> Urban, tech-savvy, values style, status, and cutting-edge features.</li>
-                    </ul><a href="#coolray-deep-dive" class="mt-auto block w-full text-center bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">Why the Coolray is the Perfect Match</a></div>
-                    <div class="card flex flex-col"><img src="https://images.unsplash.com/photo-1572173710144-6a2a6a4a1e94?q=80&w=1974&auto=format&fit=crop" alt="Family enjoying a road trip" class="rounded-lg mb-6 w-full h-64 object-cover"><h3 class="text-3xl font-bold mb-4">The Forward-Thinking Family</h3><p class="pill bg-green-100 text-green-800 mb-4">Target Car: Geely Starray</p><ul class="space-y-3 text-gray-600 flex-grow mb-6">
-                        <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10003;</span><strong>Age & Status:</strong> 35-50, married with children, established professional.</li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10003;</span><strong>Est. Household Income:</strong> $2,000 - $4,000+ / month.</li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-3 mt-1">&#10003;</span><strong>Lifestyle:</strong> Family-focused, values safety, premium comfort, and sophisticated design.</li>
-                    </ul><a href="#starray-deep-dive" class="mt-auto block w-full text-center bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition-colors">Why the Starray is the Perfect Match</a></div>
+                <div class="grid md:grid-cols-2 gap-8 w-full max-w-5xl">
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <img src="https://scontent.fpnh2-2.fna.fbcdn.net/v/t39.30808-6/528227799_746251964820707_6009338867918470434_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFuQ7yILz8xnXJnHMq3v1YxHrdctCQavyYet1y0JBq_JlFM9OUkSDSEuv8o-3zbAa3q06IdRQ4P9yu2YQAmiGC6&_nc_ohc=ZsuxOH0_QUEQ7kNvwEyAGZL&_nc_oc=AdnHnGuAeqZwsyBkLqgOAhCoH4M1UFoucY6EX3yVYL4zTQyES9__DZcupqt1A0yWqdI&_nc_zt=23&_nc_ht=scontent.fpnh2-2.fna&_nc_gid=TqbyCef2tDYjrSfjf43Zpw&oh=00_AfURzlKw8p10uO6AQ_EBxaUVJTkDDKAJsvA2Zypo1bKPLg&oe=68AC581D" alt="Modern Professional with sports car" class="rounded-lg mb-4 w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/ef4444/ffffff?text=Coolray';">
+                        <h3 class="text-2xl font-bold mb-2">The Modern Professional</h3>
+                        <p class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium mb-4">Target: Geely Coolray</p>
+                        <ul class="text-left space-y-2 text-gray-600">
+                            <li><strong>Age:</strong> 22-40, Youth, Manager or SME owner.</li>
+                            <li><strong>Income:</strong> $500 - $1,000 / month.</li>
+                            <li><strong>Values:</strong> Style, status, and cutting-edge features.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <img src="https://scontent.fpnh2-3.fna.fbcdn.net/v/t39.30808-6/532127012_750969947682242_1829641981068225137_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGhKc0Bl04KbE4vYN516jLtJTxVRgwWLlklPFVGDBYuWWs9fUxyb3G1Wk-5rLVi7bL1gei998yjooKY_EoCIbdJ&_nc_ohc=Fiw-NeiGPVkQ7kNvwGxbjHX&_nc_oc=AdlYMyZnAmqZkfTy9clyh0rHvOnDaPmVm8DXbISGHjIvYJTh802gFFp8fGTcILiEIkE&_nc_zt=23&_nc_ht=scontent.fpnh2-3.fna&_nc_gid=CFWlPll31k_vLTHRWOv96w&oh=00_AfWEqSJNirnr4k-SEl4ZUoU6Vk5pyDSHZfZ7DeYtqhNj3A&oe=68AC4630" alt="Family enjoying a road trip" class="rounded-lg mb-4 w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/22c55e/ffffff?text=Starray';">
+                        <h3 class="text-2xl font-bold mb-2">The Forward-Thinking Family</h3>
+                         <p class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium mb-4">Target: Geely Starray</p>
+                        <ul class="text-left space-y-2 text-gray-600">
+                            <li><strong>Age:</strong> 28-50, married with children.</li>
+                            <li><strong>Income:</strong> $1,000 - $2,500+ / month.</li>
+                            <li><strong>Values:</strong> Safety, premium comfort, and sophisticated design.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Slide 5: Coolray Deep Dive -->
-        <section id="coolray-deep-dive" class="section bg-gray-900 text-white">
-            <div class="container mx-auto"><div class="text-center mb-12"><h2 class="text-3xl md:text-5xl font-bold mb-2">Spotlight: The <span class="text-red-500">Coolray</span></h2><p class="text-lg text-blue-300 max-w-3xl mx-auto">Engineered for the young, confident, and fashionable professional.</p></div>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="space-y-4"><img src="https://www.topgear.com.ph/images/2023/06/07/2023-geely-coolray-sport-main-1686121980.jpg" alt="Dynamic Exterior of Geely Coolray" class="rounded-lg mb-4 h-56 w-full object-cover"><h3 class="text-2xl font-bold text-center">Dynamic Exterior</h3><p class="text-gray-300 text-center text-sm">Based on "Racing through Time" aesthetics, the Coolray makes a statement of confidence.</p><div class="feature-card !bg-gray-800"><h4 class="font-bold text-lg text-white">Expanding Cosmos Grille</h4><p class="text-sm text-gray-400">A bold front that captures attention on the streets of Phnom Penh.</p></div></div>
-                    <div class="space-y-4"><img src="https://www.topgear.com.ph/images/2023/06/07/2023-geely-coolray-sport-interior-1686122002.jpg" alt="Refined Interior of Geely Coolray" class="rounded-lg mb-4 h-56 w-full object-cover"><h3 class="text-2xl font-bold text-center">Refined Interior</h3><p class="text-gray-300 text-center text-sm">An enveloping, jet-inspired cockpit that puts technology at your fingertips.</p><div class="feature-card !bg-gray-800"><h4 class="font-bold text-lg text-white">Jet Throttle Shifter</h4><p class="text-sm text-gray-400">Ergonomic and sporty design that enhances the driving experience.</p></div></div>
-                    <div class="space-y-4"><img src="https://carguide.ph/_assets/uploads/2023-geely-coolray-sport-05.jpg" alt="Smart Technology screen in Geely Coolray" class="rounded-lg mb-4 h-56 w-full object-cover"><h3 class="text-2xl font-bold text-center">Smart Technology</h3><p class="text-gray-300 text-center text-sm">L2 Autonomous Driving features that raise the benchmark for safety and convenience.</p><div class="feature-card !bg-gray-800"><h4 class="font-bold text-lg text-white">360° Panoramic View</h4><p class="text-sm text-gray-400">A complete 3D view of your surroundings for ultimate peace of mind.</p></div></div>
+            <!-- Slide 5: Coolray Deep Dive -->
+            <div id="slide-5" class="slide hidden w-full h-full p-8 md:p-12 flex flex-col items-center justify-center bg-gray-900 text-white">
+                <div class="text-center mb-12"><h2 class="text-3xl md:text-5xl font-bold mb-2">Spotlight: The <span class="text-red-500">Coolray</span></h2><p class="text-lg text-blue-300 max-w-3xl mx-auto">Engineered for the young, confident, and fashionable professional.</p></div>
+                <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl">
+                    <div class="text-center">
+                        <img src="https://scontent.fpnh2-2.fna.fbcdn.net/v/t39.30808-6/485951759_640573418721896_7288043935926082408_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEGowziaYdnSfUhVqPHW96kHBkchlHbKxIcGRyGUdsrErVvQeT5TXo66EbxF-HgDB16JuksrKqqZhOQGdYf7Y2q&_nc_ohc=Cq_8FG3P-vUQ7kNvwHI9Qgr&_nc_oc=Adku1Y0QbEchrc_YQP6tO9NVGWdhTbiKHFOLlCYSvatv8XDxnGX1nKM4UmM6LlVb4sw&_nc_zt=23&_nc_ht=scontent.fpnh2-2.fna&_nc_gid=YeD7x1rWioOx6qlDtLtCeg&oh=00_AfVY1lDd9jbZoQj9rxFHoFM5-7Pwdh0dIDmG3Xsed9Yr-A&oe=68AC4E15" alt="Car Exterior" class="w-24 h-24 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-2xl font-bold">Dynamic Exterior</h3>
+                        <p class="text-gray-300 mt-2">A bold "Expanding Cosmos Grille" that captures attention.</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="https://scontent.fpnh2-2.fna.fbcdn.net/v/t39.30808-6/486455340_640573282055243_7591695173813240691_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGjgVEcUyJIwAV1Gxpb_t27R7hgwdMiI8dHuGDB0yIjx0VmvEaPa61Sn9oN8dJ5SM4IZGz7mB503rGPVQL5JTCi&_nc_ohc=N3p0xOfYOq8Q7kNvwEWX9RU&_nc_oc=AdkpM7jcdPOMoHibC405_Wiszl5OhTCf0RO7HMhy9YescNyKiTXR1MVBUfys54GeJOk&_nc_zt=23&_nc_ht=scontent.fpnh2-2.fna&_nc_gid=Oz-6Tt6PIXCZL58r3NcSqg&oh=00_AfW0iF1Emo1nCbrR1opUfkQ-_qbEOW3LcUK-h0BjB6ls8A&oe=68AC67B1" alt="Car Interior" class="w-24 h-24 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-2xl font-bold">Refined Interior</h3>
+                        <p class="text-gray-300 mt-2">An enveloping, jet-inspired cockpit with an ergonomic throttle shifter.</p>
+                    </div>
+                    <div class="text-center">
+                        <img src="https://scontent.fpnh2-1.fna.fbcdn.net/v/t39.30808-6/486060327_640573742055197_5041762584162049156_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFwbzn4OsV20L0NAjN1CwqTQk9q6K6j16JCT2rorqPXokGq5x_cFx41fEgSMK14ozjIs9WK--rg0z9tKEI3c9sZ&_nc_ohc=KFz1bwGcKPYQ7kNvwESQr1_&_nc_oc=AdkJEIABR6l19IyOMSPP3AQ_mWM4KpifOZYIZw9NuaW6YTav45UKAexYCnsGS6JeXBQ&_nc_zt=23&_nc_ht=scontent.fpnh2-1.fna&_nc_gid=jKDLKsTtHDnX5wtI44DPJA&oh=00_AfXF9pTir5H4W0I2_ep0VFS3C42X_6l26biGny9yIr8oNw&oe=68AC45D8" alt="Car Technology" class="w-24 h-24 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-2xl font-bold">Smart Technology</h3>
+                        <p class="text-gray-300 mt-2">L2 Autonomous Driving features and a 360° Panoramic View.</p>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Slide 6: Starray Deep Dive -->
-        <section id="starray-deep-dive" class="section bg-gray-100">
-            <div class="container mx-auto"><div class="text-center mb-12"><h2 class="text-3xl md:text-5xl font-bold mb-2">Spotlight: The <span class="text-green-600">Starray</span></h2><p class="text-lg text-gray-600 max-w-3xl mx-auto">A fusion of tomorrow’s aesthetics and astronomical wonders for the modern family.</p></div>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="space-y-4"><img src="https://images.summitmedia-digital.com/topgear/images/2023/09/27/geely-starray-ph-launch-main-1695804595.jpg" alt="Astronomical Exterior of Geely Starray" class="rounded-lg mb-4 h-56 w-full object-cover"><h3 class="text-2xl font-bold text-center">Astronomical Exterior</h3><p class="text-gray-600 text-center text-sm">Inspired by the Vision Starburst concept, the Starray runs like a star wherever you go.</p><div class="feature-card"><h4 class="font-bold text-lg text-gray-800">Particle Ray Headlights</h4><p class="text-sm text-gray-500">Industry-first super thin headlights for a futuristic presence.</p></div></div>
-                    <div class="space-y-4"><img src="https://carinsider.com.ph/wp-content/uploads/2023/10/Geely-Starray-Interior.jpg" alt="Modernist Interior of Geely Starray" class="rounded-lg mb-4 h-56 w-full object-cover"><h3 class="text-2xl font-bold text-center">Modernist Interior</h3><p class="text-gray-600 text-center text-sm">A sleek, modern, and high-end cabin adorned with light brown leather and ambient lighting.</p><div class="feature-card"><h4 class="font-bold text-lg text-gray-800">Diamond-cut Gear Selector</h4><p class="text-sm text-gray-500">Adds a touch of brilliance and confidence to every drive.</p></div></div>
-                    <div class="space-y-4"><img src="https://carinsider.com.ph/wp-content/uploads/2023/10/Geely-Starray-Infotainment-System.jpg" alt="Intelligent Drive screen in Geely Starray" class="rounded-lg mb-4 h-56 w-full object-cover"><h3 class="text-2xl font-bold text-center">Intelligent Drive</h3><p class="text-gray-600 text-center text-sm">Advanced ADAS functions and premium features for a safe and deluxe experience.</p><div class="feature-card"><h4 class="font-bold text-lg text-gray-800">HARMAN Infinity Sound</h4><p class="text-sm text-gray-500">A 9-speaker deluxe audio system for an immersive journey.</p></div></div>
+            <!-- Slide 6: Starray Deep Dive -->
+            <div id="slide-6" class="slide hidden w-full h-full p-8 md:p-12 flex flex-col items-center justify-center bg-gray-100">
+                <div class="text-center mb-12"><h2 class="text-3xl md:text-5xl font-bold mb-2">Spotlight: The <span class="text-green-600">Starray</span></h2><p class="text-lg text-gray-600 max-w-3xl mx-auto">A fusion of tomorrow’s aesthetics and astronomical wonders for the modern family.</p></div>
+                <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl">
+                     <div class="text-center">
+                        <img src="https://scontent.fpnh2-3.fna.fbcdn.net/v/t39.30808-6/495672422_677664461679458_606533752658650527_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFOaQbcuaYo-seqQTjHX2dZzhmjAWjwhGTOGaMBaPCEZCozMVSQxEd2M6B51Ju2QFugCuiTDloNfeoqpowaJYb5&_nc_ohc=EVe4CzkfBgYQ7kNvwHYuzZL&_nc_oc=Adnav_BZaNLwo8Lim1WUqBQ4qX6NPn4XJW1cYonMe3Yqqv6inxYICMs_AAEzTVcet0g&_nc_zt=23&_nc_ht=scontent.fpnh2-3.fna&_nc_gid=bhfRM_Q74VBHDHg_5fk6WA&oh=00_AfXG-CVrwTLVQoMHG8uSxmQLtQMiyGMp7pBL4-8GHLWEIA&oe=68AC48D7" alt="Starray Exterior" class="w-24 h-24 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-2xl font-bold">Astronomical Exterior</h3>
+                        <p class="text-gray-600 mt-2">Futuristic presence with industry-first "Particle Ray Headlights".</p>
+                    </div>
+                     <div class="text-center">
+                        <img src="https://scontent.fpnh2-2.fna.fbcdn.net/v/t39.30808-6/495517733_677664618346109_1176316784230293867_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGlUQUMDn2IJZJgYwYyEFgNLl4m6vx-ySwuXibq_H7JLFcsuRRp78DmEui6bt9IHYPj1uMdKbPLAWMXaAUPGetL&_nc_ohc=eY6Sw1hjo9UQ7kNvwEEyaDk&_nc_oc=AdmLLrJrTb-NeO990A8Ycpj-N9_Hlx0RdYVL45XkgJcU8G4dW4jDUfi-EXenKolvgTk&_nc_zt=23&_nc_ht=scontent.fpnh2-2.fna&_nc_gid=bSSu4_e_n8iwFmxRSfFSow&oh=00_AfUR280xW6WEGvOl_uTTPiP9vFXulat83Rx8mXhUsDRlQw&oe=68AC497B" alt="Starray Interior" class="w-24 h-24 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-2xl font-bold">Modernist Interior</h3>
+                        <p class="text-gray-600 mt-2">A sleek, high-end cabin with a "Diamond-cut Gear Selector".</p>
+                    </div>
+                     <div class="text-center">
+                        <img src="https://scontent.fpnh2-3.fna.fbcdn.net/v/t39.30808-6/496184060_677665235012714_1851573486809930127_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGD-2YoLZbkp0f-1kjw18PDOWxgYtyj9a85bGBi3KP1r_KRqUD9vkUtRi9fDWnbfMV-NfOJshCPUOA9b0YAuyrE&_nc_ohc=vcvmG4UYsl0Q7kNvwGPT9vG&_nc_oc=AdmbzUWHYH-Nwc7vMRsC_IsOYwc4OU1T3S1LjMa5yRu6eO7kl_nUlruZI9WGyzrICyY&_nc_zt=23&_nc_ht=scontent.fpnh2-3.fna&_nc_gid=dWyQHTla92R6SpDGkWm6sg&oh=00_AfXA8c59_mL9kqh_LPNearxoyTz6UxJ7QNADP4wAAlBf_Q&oe=68AC6E2E" alt="Starray Sound System" class="w-24 h-24 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-2xl font-bold">Intelligent Drive</h3>
+                        <p class="text-gray-600 mt-2">Advanced safety features and a 9-speaker HARMAN Infinity Sound system.</p>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Slide 7: Strategy -->
-        <section id="strategy" class="section bg-white">
-            <div class="container mx-auto"><div class="text-center mb-12"><h2 class="text-3xl md:text-5xl font-bold mb-2">Our 3-Pillar Content Strategy</h2><p class="text-lg text-gray-600 max-w-3xl mx-auto">Each content pillar is designed to move customers through the sales funnel, from interest to action.</p></div>
-                <div class="space-y-6">
-                    <div class="card !bg-gray-50"><h3 class="text-2xl font-bold mb-2 text-blue-600">Pillar 1: Drive Showroom Walk-Ins</h3><p class="text-gray-600 mb-4">This content creates urgency and provides a compelling reason to visit in person.</p><div class="grid md:grid-cols-3 gap-4 text-center"><div class="p-4 bg-white rounded-lg"><h4 class="font-bold">Test Drive Experience</h4></div><div class="p-4 bg-white rounded-lg"><h4 class="font-bold">Limited-Time Offers</h4></div><div class="p-4 bg-white rounded-lg"><h4 class="font-bold">Showroom Events</h4></div></div></div>
-                    <div class="card !bg-gray-50"><h3 class="text-2xl font-bold mb-2 text-green-600">Pillar 2: Generate Quality Inboxes</h3><p class="text-gray-600 mb-4">This content engages serious buyers and prompts them to ask for more information.</p><div class="grid md:grid-cols-3 gap-4 text-center"><div class="p-4 bg-white rounded-lg"><h4 class="font-bold">Feature Spotlights</h4></div><div class="p-4 bg-white rounded-lg"><h4 class="font-bold">"Ask Me Anything"</h4></div><div class="p-4 bg-white rounded-lg"><h4 class="font-bold">Direct Price Inquiry</h4></div></div></div>
-                    <div class="card !bg-gray-50"><h3 class="text-2xl font-bold mb-2 text-purple-600">Pillar 3: Build Community & Lifestyle</h3><p class="text-gray-600 mb-4">This content connects with the audience on an emotional level and reinforces the brand identity.</p><div class="grid md:grid-cols-3 gap-4 text-center"><div class="p-4 bg-white rounded-lg"><h4 class="font-bold">Customer Stories</h4></div><div class="p-4 bg-white rounded-lg"><h4 class="font-bold">"Geely in the Wild"</h4></div><div class="p-4 bg-white rounded-lg"><h4 class="font-bold">Interactive Polls</h4></div></div></div>
+            <!-- Slide 7: Strategy Overview -->
+            <div id="slide-7" class="slide hidden w-full h-full p-8 md:p-12 flex flex-col items-center justify-center">
+                <div class="text-center mb-12"><h2 class="text-3xl md:text-5xl font-bold mb-2">Our 3-Pillar Content Strategy</h2><p class="text-lg text-gray-600 max-w-3xl mx-auto">Each pillar moves customers from interest to action.</p></div>
+                <div class="space-y-6 w-full max-w-4xl">
+                    <div class="bg-gray-50 p-4 rounded-lg"><h3 class="text-2xl font-bold text-blue-600">Pillar 1: Drive Showroom Walk-Ins</h3><p class="text-gray-600">Content: Test Drive Experiences, Limited-Time Offers, Showroom Events.</p></div>
+                    <div class="bg-gray-50 p-4 rounded-lg"><h3 class="text-2xl font-bold text-green-600">Pillar 2: Generate Quality Inboxes</h3><p class="text-gray-600">Content: Feature Spotlights, "Ask Me Anything" sessions, Direct Price Inquiries.</p></div>
+                    <div class="bg-gray-50 p-4 rounded-lg"><h3 class="text-2xl font-bold text-purple-600">Pillar 3: Build Community & Lifestyle</h3><p class="text-gray-600">Content: Customer Stories, "Geely in the Wild" photo contests, Interactive Polls.</p></div>
                 </div>
             </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="section bg-gray-900 text-white">
-            <div class="container mx-auto text-center">
-                <h3 class="text-3xl font-bold mb-4">Thank You</h3>
-                <p class="text-gray-400 mb-2">We are excited about the opportunity to partner with Geely Cambodia.</p>
-                <p class="text-gray-400">Questions? Let's talk.</p>
+            
+            <!-- Slide 8: Pillar 1 Details -->
+            <div id="slide-8" class="slide hidden w-full h-full p-8 md:p-12 flex flex-col items-center justify-center bg-blue-50">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-bold text-blue-700 mb-2">Pillar 1: Drive Showroom Walk-Ins</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">Creating urgency and a compelling reason to visit in person.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl">
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://www.thesilverlining.com/hubfs/Tips%20for%20test%20driving%20a%20car.jpg" alt="Test Drive" class="w-full h-32 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Test Drive Experience</h3>
+                        <p class="text-gray-600">High-energy videos showcasing the thrill of driving a Geely, with a clear call-to-action.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://img.freepik.com/premium-vector/limited-time-offer-vector-elements-design_635054-108.jpg?semt=ais_hybrid&w=740" alt="Special Offer" class="w-full h-32 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Limited-Time Offers</h3>
+                        <p class="text-gray-600">Promote exclusive, time-sensitive deals to create a fear of missing out (FOMO).</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://miro.medium.com/1*UqBxXzxPuCyMtFITV2gCLg.jpeg" alt="Showroom Event" class="w-full h-32 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Showroom Events</h3>
+                        <p class="text-gray-600">Host and promote special events like a new model launch party to attract foot traffic.</p>
+                    </div>
+                </div>
             </div>
-        </footer>
-    </main>
-    
+
+            <!-- Slide 9: Pillar 2 Details -->
+            <div id="slide-9" class="slide hidden w-full h-full p-8 md:p-12 flex flex-col items-center justify-center bg-green-50">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-bold text-green-700 mb-2">Pillar 2: Generate Quality Inboxes</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">Engaging serious buyers and prompting them to ask for more information.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl">
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://placehold.co/400x300/16a34a/ffffff?text=Feature+Spotlight" alt="Feature Spotlight" class="w-full h-32 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Feature Spotlights</h3>
+                        <p class="text-gray-600">Detailed carousels and videos that highlight a single, high-value feature.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://placehold.co/400x300/16a34a/ffffff?text=Live+Q%26A" alt="Live Q&A" class="w-full h-32 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">"Ask Me Anything"</h3>
+                        <p class="text-gray-600">Live video sessions with a sales expert answering questions from the comments.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://placehold.co/400x300/16a34a/ffffff?text=Get+A+Quote" alt="Get a Quote" class="w-full h-32 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Direct Price Inquiry</h3>
+                        <p class="text-gray-600">Posts with a clear call to "Inbox us for the best price" to capture high-intent leads.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Pillar 3 Details -->
+            <div id="slide-10" class="slide hidden w-full h-full p-8 md:p-12 flex flex-col items-center justify-center bg-purple-50">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-bold text-purple-700 mb-2">Pillar 3: Build Community & Lifestyle</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">Connecting with the audience on an emotional level to reinforce brand identity.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl">
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://placehold.co/400x300/7e22ce/ffffff?text=Customer+Story" alt="Customer Story" class="w-full h-32 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Customer Stories</h3>
+                        <p class="text-gray-600">Feature real Geely owners in Cambodia, sharing their photos and quotes.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://placehold.co/400x300/7e22ce/ffffff?text=User+Content" alt="User Generated Content" class="w-full h-32 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">"Geely in the Wild"</h3>
+                        <p class="text-gray-600">Encourage users to share photos of their Geely with a hashtag for a chance to win.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg text-center shadow-md">
+                        <img src="https://placehold.co/400x300/7e22ce/ffffff?text=Poll" alt="Interactive Poll" class="w-full h-32 rounded-lg mx-auto mb-4 object-cover">
+                        <h3 class="text-xl font-bold mb-2">Interactive Polls</h3>
+                        <p class="text-gray-600">Engage the audience with fun polls like 'Which color is your favorite?' to boost interaction.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 11: Closing -->
+            <div id="slide-11" class="slide hidden w-full h-full p-8 md:p-12 flex flex-col items-center justify-center text-center bg-gray-900 text-white">
+                <img src="https://scontent.fpnh2-1.fna.fbcdn.net/v/t39.30808-6/487697667_650374097741828_8120467163881016225_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeH6V7Bml0Iy87Aecef6yatvfrghbAQwt3V-uCFsBDC3dapBWCLsm3uug5NFlxJmwhoAvCIRGJxIpVXpP2e6VdKS&_nc_ohc=HgJPpbF9pIAQ7kNvwFLtKjV&_nc_oc=Adkg2iDHUZiGqFu4yDtu9F1wIck5uNYg9oPGzYSLsIR7YmkPDNQ6tgKzkc63drjOPyQ&_nc_zt=23&_nc_ht=scontent.fpnh2-1.fna&_nc_gid=DS7nITggNKYU29K_vySSSA&oh=00_AfWtQ1LIEREwd049vciW8tNaWytW1RzrWmQcZtUqCDm6Vg&oe=68AC3F46" alt="Thank You" class="w-24 h-24 rounded-full mx-auto mb-6 object-cover">
+                <h2 class="text-4xl font-bold mb-4">Thank You</h2>
+                <p class="text-gray-300 text-xl max-w-2xl">We are excited about the opportunity to partner with Geely Cambodia. Let's talk.</p>
+            </div>
+        </div>
+        
+        <!-- Navigation Controls -->
+        <div class="bg-gray-50 border-t border-gray-200 p-4 flex items-center justify-between">
+            <button id="prev-btn" class="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                <i data-lucide="arrow-left" class="w-5 h-5 mr-2"></i>
+                Prev
+            </button>
+            <div id="slide-counter" class="text-sm font-medium text-gray-600">
+                Slide 1 / 11
+            </div>
+            <button id="next-btn" class="flex items-center px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                Next
+                <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+            </button>
+        </div>
+    </div>
+
     <script>
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // --- State Management ---
+            let currentSlide = 1;
+            const totalSlides = document.querySelectorAll('.slide').length;
+
+            // --- DOM Element References ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+
+            // --- Functions ---
+            function updateView() {
+                slides.forEach(slide => slide.classList.add('hidden'));
+                const activeSlide = document.getElementById(`slide-${currentSlide}`);
+                if (activeSlide) activeSlide.classList.remove('hidden');
+                slideCounter.textContent = `Slide ${currentSlide} / ${totalSlides}`;
+                prevBtn.disabled = currentSlide === 1;
+                nextBtn.disabled = currentSlide === totalSlides;
+            }
+
+            function goToNextSlide() {
+                if (currentSlide < totalSlides) {
+                    currentSlide++;
+                    updateView();
+                }
+            }
+
+            function goToPrevSlide() {
+                if (currentSlide > 1) {
+                    currentSlide--;
+                    updateView();
+                }
+            }
+
+            // --- Event Listeners ---
+            nextBtn.addEventListener('click', goToNextSlide);
+            prevBtn.addEventListener('click', goToPrevSlide);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') goToNextSlide();
+                else if (e.key === 'ArrowLeft') goToPrevSlide();
             });
+
+            // --- Initial Setup ---
+            updateView();
         });
     </script>
 
